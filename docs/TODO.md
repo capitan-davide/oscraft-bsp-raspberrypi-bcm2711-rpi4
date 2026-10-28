@@ -1,7 +1,6 @@
 # To do
 
-Work planned for the BSP, roughly in order. The startup library has its
-own list in its repository.
+Work planned for the BSP and its startup library, roughly in order.
 
 ## Startup: finished
 
