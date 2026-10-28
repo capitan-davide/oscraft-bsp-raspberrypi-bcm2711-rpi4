@@ -11,12 +11,14 @@
 # takes the DTB address from x0.
 ###############################################################################
 
+# ANCHOR: bootstrap
 [image=0x80000]
 [+keeplinked]
 [virtual=aarch64le,raw] .boot = {
     startup-bcm2711-rpi4 ${STARTUP_OPTS}
     PATH=/proc/boot:/bin:/usr/bin:/sbin:/usr/sbin LD_LIBRARY_PATH=/proc/boot:/lib:/usr/lib:/lib/dll procnto-smp-instr -v
 }
+# ANCHOR_END: bootstrap
 
 [+script] .script = {
     display_msg "Welcome to QNX on the Raspberry Pi 4"

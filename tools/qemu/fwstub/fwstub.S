@@ -90,12 +90,13 @@ el3_entry:
     msr     elr_el3, x0
     eret
 
+/* ANCHOR: fwstub_el2 */
 el2_entry:
     mrs     x5, mpidr_el1
     and     x5, x5, #0xff
     cbz     x5, primary
 
-    /* Cores 1-3: wait until the kernel writes our release address. */
+    /* Cores 1-3: wait until startup writes our release address. */
     adr     x6, spin_table
     add     x6, x6, x5, lsl #3
 3:  wfe
@@ -112,5 +113,6 @@ enter:
     mov     x2, xzr
     mov     x3, xzr
     br      x4
+/* ANCHOR_END: fwstub_el2 */
 
     .ltorg
