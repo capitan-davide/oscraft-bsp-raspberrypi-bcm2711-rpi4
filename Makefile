@@ -1,7 +1,8 @@
 # Build and run the Raspberry Pi 4 BSP. See README.md.
 #
-# Needs the QNX SDP 8.0 environment: source qnxsdp-env.sh from the SDP
-# first, which sets QNX_HOST and QNX_TARGET and puts mkifs on the PATH.
+# The images need the QNX SDP 8.0 environment: source qnxsdp-env.sh from
+# the SDP first, which sets QNX_HOST and QNX_TARGET and puts mkifs on the
+# PATH. The startup, the unit tests and the books do not.
 
 BUILD := build
 
@@ -20,9 +21,8 @@ STARTUP_DIR := $(BUILD)/startup
 STARTUP     := $(STARTUP_DIR)/startup-bcm2711-rpi4
 IMAGE       := $(BUILD)/rpi4.ifs
 
-ifeq ($(QNX_TARGET),)
-$(error QNX_TARGET is not set: source qnxsdp-env.sh from the QNX SDP 8.0 first)
-endif
+# The first command of a recipe that needs the SDP.
+need_sdp = @test -n "$(QNX_TARGET)" || { echo "QNX_TARGET is not set: source qnxsdp-env.sh from the QNX SDP 8.0 first" >&2; exit 1; }
 
 # QNX's RPi4 BSP, as installed by the QNX Software Center into the SDP's
 # bsp/ directory (the newest one, if there are several). Its prebuilt
@@ -41,6 +41,7 @@ BSP_PATH := $(addprefix $(abspath $(BSP_DIR))/prebuilt/aarch64le/,boot/sys sbin)
 empty :=
 space := $(empty) $(empty)
 define mkifs
+	$(need_sdp)
 	@mkdir -p $(@D)
 	sed 's|$${STARTUP_OPTS}|$(STARTUP_OPTS)|' $< > $@.build
 	MKIFS_PATH=$(subst $(space),:,$(strip $(1) $(BSP_PATH) $(SDP_PATH))) mkifs $@.build $@
@@ -90,6 +91,7 @@ qemu-test: $(QEMU_TEST_IMAGE) qemu
 # layout the Rust ABI types are tested against.
 ABI_DIR := oscraft-startup/abi
 abi-layout:
+	$(need_sdp)
 	@mkdir -p $(BUILD)
 	ntoaarch64-gcc -c $(ABI_DIR)/layout.c -o $(BUILD)/layout.o
 	python3 -I $(ABI_DIR)/layout.py ntoaarch64-nm $(BUILD)/layout.o $(ABI_DIR)/layout.txt
@@ -124,6 +126,7 @@ $(QEMU_DIR)/bcm2711-rpi-4-b.dtb: tools/rpi4/fetch-firmware.sh
 bsp: $(BSP_DIR)/.unpacked
 
 $(BSP_DIR)/.unpacked: $(QNX_BSP_ZIP)
+	$(need_sdp)
 	@test -n "$<" || { echo "QNX RPi4 BSP zip not found: install the BSP with the QNX Software Center, or set QNX_BSP_ZIP" >&2; exit 1; }
 	@mkdir -p $(@D)
 	unzip -oq $< 'prebuilt/*' 'binary_files_with_symbols/*' -d $(BSP_DIR)
