@@ -18,6 +18,29 @@ const GICC: u64 = 0xff84_2000;
 /// The virtual timer's PPI: the system tick.
 const TIMER_PPI: i32 = 27;
 
+/// The BCM2711's four Cortex-A72 cores.
+const NUM_CPUS: usize = 4;
+
+// ANCHOR: spin_table
+/// The firmware's spin table: secondary core n waits until the 64-bit word
+/// at 0xd8 + 8 * n holds the address to start at (the DTB's
+/// cpu-release-addr). The first page also holds the firmware's armstub.
+const SPIN_TABLE: u64 = 0xd8;
+const FIRMWARE_PAGE: u64 = 0x1000;
+
+/// Let core `cpu` run from `entry`: post the address and wake the cores
+/// waiting in WFE.
+fn release_cpu(cpu: usize, entry: u64) {
+    let slot = (SPIN_TABLE + 8 * cpu as u64) as *mut u64;
+    // SAFETY: the spin table is RAM in the first page, which startup
+    // reserved; the core reads it with its MMU off, as startup writes it.
+    unsafe {
+        slot.write_volatile(entry);
+        core::arch::asm!("dsb sy", "sev");
+    }
+}
+// ANCHOR_END: spin_table
+
 fn main(s: &mut Startup) -> ! {
     console::set(&miniuart::MINIUART);
     for opt in s.options(BOARD_OPTIONS) {
@@ -26,8 +49,11 @@ fn main(s: &mut Startup) -> ! {
             other => s.handle_common_option(&other),
         }
     }
+    s.init_smp(NUM_CPUS, release_cpu);
     // TODO: RAM from the VideoCore mailbox.
     s.add_ram(0, 0x8000_0000);
+    // The armstub and spin table stay: the secondary cores read the table.
+    s.ram.reserve(0, FIRMWARE_PAGE);
     s.init_mmu();
     oscraft_startup::arch::aarch64::gic_v2::init(s, GICD, GICC);
     s.init_qtime(TIMER_PPI);
