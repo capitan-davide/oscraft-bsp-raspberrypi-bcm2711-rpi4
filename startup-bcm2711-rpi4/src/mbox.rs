@@ -24,6 +24,10 @@ const TAG_MAC_ADDRESS: u32 = 0x0001_0003;
 const TAG_BOARD_SERIAL: u32 = 0x0001_0004;
 const TAG_VC_MEMORY: u32 = 0x0001_0006;
 const TAG_CLOCK_RATE: u32 = 0x0003_0002;
+const TAG_POWER_STATE: u32 = 0x0002_0001;
+const TAG_VOLTAGE: u32 = 0x0003_0003;
+const TAG_TEMPERATURE: u32 = 0x0003_0006;
+const TAG_EXPGPIO_STATE: u32 = 0x0003_0041;
 /// The ARM cores' clock, for TAG_CLOCK_RATE.
 pub const CLOCK_ARM: u32 = 3;
 
@@ -91,3 +95,34 @@ pub fn vc_memory() -> (u64, u64) {
 pub fn clock_rate(id: u32) -> u32 {
     call(TAG_CLOCK_RATE, [id, 0])[1]
 }
+
+// ANCHOR: diagnostics
+/// The firmware's view of the board, for `-vvvv`, as QNX's startup prints
+/// it: the SoC's temperature (thousandths of a degree), the voltages
+/// (core, SDRAM controller, PHY, I/O), the clocks that are running, the
+/// devices' power states and the expander GPIOs (Bluetooth, Wi-Fi, LEDs,
+/// SD card voltage, camera).
+pub fn print_diagnostics() {
+    use oscraft_startup::console::print;
+    print(format_args!("Temps {}\nVolts", call(TAG_TEMPERATURE, [0, 0])[1]));
+    for id in 1..=4 {
+        print(format_args!(" {id}={}", call(TAG_VOLTAGE, [id, 0])[1]));
+    }
+    print(format_args!("\nClock"));
+    for id in 1..=14 {
+        let hz = clock_rate(id);
+        if hz != 0 {
+            print(format_args!(" {id}={}MHz", hz / 1_000_000));
+        }
+    }
+    print(format_args!("\nPower"));
+    for id in 0..=8 {
+        print(format_args!(" {id}={}", call(TAG_POWER_STATE, [id, 0])[1]));
+    }
+    print(format_args!("\neGPIO"));
+    for gpio in 128..=133 {
+        print(format_args!(" {gpio}={}", call(TAG_EXPGPIO_STATE, [gpio, 0])[1]));
+    }
+    print(format_args!("\n"));
+}
+// ANCHOR_END: diagnostics

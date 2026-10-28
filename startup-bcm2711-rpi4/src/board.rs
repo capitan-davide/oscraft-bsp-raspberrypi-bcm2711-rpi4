@@ -140,6 +140,10 @@ fn main(s: &mut Startup) -> ! {
         );
     }
 
+    if s.debug_level > 3 {
+        mbox::print_diagnostics();
+    }
+
     s.init_smp(NUM_CPUS, release_cpu);
     init_ram(s, rev);
     s.init_mmu();
