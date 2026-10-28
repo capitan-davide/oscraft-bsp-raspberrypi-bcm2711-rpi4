@@ -46,7 +46,7 @@ define mkifs
 	MKIFS_PATH=$(subst $(space),:,$(strip $(1) $(BSP_PATH) $(SDP_PATH))) mkifs $@.build $@
 endef
 
-.PHONY: all startup image run qemu bsp qnx-reference qnx-reference-run clean
+.PHONY: all startup image run test abi-layout qemu bsp qnx-reference qnx-reference-run clean
 
 all: image qemu
 
@@ -69,6 +69,18 @@ $(IMAGE): images/rpi4.build startup $(BSP_DIR)/.unpacked
 
 run: $(IMAGE) qemu
 	tools/qemu/run.sh $< -no-reboot
+
+# Host unit tests of the library (layouts, parsers, the system page builder).
+test:
+	cargo test -p oscraft-startup
+
+# Regenerate oscraft-startup/abi/layout.txt from the SDP's headers: the
+# layout the Rust ABI types are tested against.
+ABI_DIR := oscraft-startup/abi
+abi-layout:
+	@mkdir -p $(BUILD)
+	ntoaarch64-gcc -c $(ABI_DIR)/layout.c -o $(BUILD)/layout.o
+	python3 -I $(ABI_DIR)/layout.py ntoaarch64-nm $(BUILD)/layout.o $(ABI_DIR)/layout.txt
 
 # QEMU support files: firmware stub and device tree.
 qemu: $(QEMU_DIR)/fwstub.elf $(QEMU_DIR)/bcm2711-rpi-4-b.dtb
