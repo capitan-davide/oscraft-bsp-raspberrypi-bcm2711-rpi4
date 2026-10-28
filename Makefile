@@ -46,7 +46,7 @@ define mkifs
 	MKIFS_PATH=$(subst $(space),:,$(strip $(1) $(BSP_PATH) $(SDP_PATH))) mkifs $@.build $@
 endef
 
-.PHONY: all startup image run test abi-layout qemu bsp qnx-reference qnx-reference-run clean
+.PHONY: all startup image run test unit-test qemu-test abi-layout qemu bsp qnx-reference qnx-reference-run clean
 
 all: image qemu
 
@@ -70,9 +70,21 @@ $(IMAGE): images/rpi4.build startup $(BSP_DIR)/.unpacked
 run: $(IMAGE) qemu
 	tools/qemu/run.sh $< -no-reboot
 
-# Host unit tests of the library (layouts, parsers, the system page builder).
-test:
-	cargo test -p oscraft-startup
+# ANCHOR: make_test
+# All tests: the unit tests on the host, then the image booted in QEMU.
+test: unit-test qemu-test
+
+# Host unit tests (layouts, parsers, the system page builder, the board's
+# revision codes).
+unit-test:
+	cargo test -p oscraft-startup -p startup-bcm2711-rpi4
+
+# Boot the image in QEMU and check QNX comes up on all 4 CPUs
+# (QEMU_TEST_IMAGE=build/qnx-reference.ifs checks QNX's own startup).
+QEMU_TEST_IMAGE ?= $(IMAGE)
+qemu-test: $(QEMU_TEST_IMAGE) qemu
+	python3 -I tools/qemu/test.py $(QEMU_TEST_IMAGE) 4
+# ANCHOR_END: make_test
 
 # Regenerate oscraft-startup/abi/layout.txt from the SDP's headers: the
 # layout the Rust ABI types are tested against.
