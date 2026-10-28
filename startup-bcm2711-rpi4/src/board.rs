@@ -1,10 +1,12 @@
 //! The board's `main()`.
 
-use crate::{mbox, miniuart, pm, revision};
+use crate::{mbox, miniuart, msi, pm, revision};
 use oscraft_startup::arch::aarch64::gic_v2;
 use oscraft_startup::cmdline::{Opt, parse_number};
+use oscraft_startup::console::{DebugDriver, DebugPort};
+use oscraft_startup::pl011;
 use oscraft_startup::syspage::strings;
-use oscraft_startup::{Startup, console, kprintln};
+use oscraft_startup::{Startup, kprintln};
 
 /// Options of this board, besides the common ones: `-W [ms]` starts the
 /// watchdog.
@@ -15,6 +17,35 @@ const GICD: u64 = 0xff84_1000;
 const GICC: u64 = 0xff84_2000;
 /// The virtual timer's PPI: the system tick.
 const TIMER_PPI: i32 = 27;
+
+// ANCHOR: debug_drivers
+/// The UARTs `-D` can choose for debug output; the first is the default.
+/// The mini-UART is on GPIO 14/15 with `enable_uart=1`. UART0, a PL011, is
+/// there instead with `dtoverlay=disable-bt` (and is QEMU's first serial
+/// port); UART3 is on GPIO 4/5 with `dtoverlay=uart3`. Both PL011s run
+/// from a 48 MHz clock.
+static DEBUG_DRIVERS: [DebugDriver; 3] = [
+    miniuart::DRIVER,
+    pl011::driver(
+        "pl011-3",
+        DebugPort {
+            base: 0xfe20_1600,
+            shift: 0,
+            baud: 115_200,
+            clk: 48_000_000,
+        },
+    ),
+    pl011::driver(
+        "pl011",
+        DebugPort {
+            base: 0xfe20_1000,
+            shift: 0,
+            baud: 115_200,
+            clk: 48_000_000,
+        },
+    ),
+];
+// ANCHOR_END: debug_drivers
 
 /// The BCM2711's four Cortex-A72 cores.
 const NUM_CPUS: usize = 4;
@@ -89,7 +120,7 @@ fn init_ram(s: &mut Startup, rev: u32) {
 
 // ANCHOR: board_main
 fn main(s: &mut Startup) -> ! {
-    console::set(&miniuart::MINIUART);
+    s.init_debug(&DEBUG_DRIVERS);
     let mut watchdog = None;
     for opt in s.options(BOARD_OPTIONS) {
         match opt {
@@ -113,16 +144,14 @@ fn main(s: &mut Startup) -> ! {
     init_ram(s, rev);
     s.init_mmu();
     gic_v2::init(s, GICD, GICC);
+    msi::init_msi(s);
     s.init_qtime(TIMER_PPI);
     s.init_boot_cpu(cpu_mhz);
 
-    // The kernel's debug output, and its way to reboot.
-    let uart = s.map_device(miniuart::BASE, 0x100);
+    // The kernel's way to reboot. (Its debug output is the console's
+    // device, which boot() sets up.)
     let pm_regs = s.map_device(pm::BASE, 0x1000);
     let sp = &mut s.syspage;
-    sp.callout.debug[0].display_char = sp.callout(&miniuart::DISPLAY_CHAR, &[uart]);
-    sp.callout.debug[0].poll_key = sp.callout(&miniuart::POLL_KEY, &[uart]);
-    sp.callout.debug[0].break_detect = sp.callout(&miniuart::BREAK_DETECT, &[]);
     sp.callout.reboot = sp.callout(&pm::REBOOT, &[pm_regs]);
 
     // What confstr() and uname report.

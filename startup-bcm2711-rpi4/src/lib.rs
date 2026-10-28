@@ -14,5 +14,7 @@ mod mbox;
 #[cfg(target_arch = "aarch64")]
 mod miniuart;
 #[cfg(target_arch = "aarch64")]
+mod msi;
+#[cfg(target_arch = "aarch64")]
 mod pm;
 mod revision;

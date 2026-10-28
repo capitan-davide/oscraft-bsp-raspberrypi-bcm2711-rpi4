@@ -1,28 +1,44 @@
 //! The mini-UART (UART1), the console on GPIO 14/15: startup's output,
 //! and the kernel's debug channel through the callouts below.
 
-use oscraft_startup::console::DebugDevice;
+use oscraft_startup::console::{DebugDriver, DebugPort};
 
 /// The mini-UART's registers, in the BCM2711's auxiliary peripherals.
 pub const BASE: u64 = 0xfe21_5000;
-const AUX_MU_IO: u64 = BASE + 0x40;
-const AUX_MU_LSR: u64 = BASE + 0x54;
+const AUX_MU_IO: u64 = 0x40;
+const AUX_MU_LSR: u64 = 0x54;
 const LSR_TX_EMPTY: u32 = 1 << 5;
 
-pub struct MiniUart;
+/// Nothing to set up: the firmware configures the mini-UART when
+/// `config.txt` has `enable_uart=1`.
+fn init(_: &DebugPort) {}
 
-pub static MINIUART: MiniUart = MiniUart;
-
-impl DebugDevice for MiniUart {
-    fn putc(&self, byte: u8) {
-        // SAFETY: the mini-UART registers are device memory, mapped 1:1
-        // while the MMU is off.
-        unsafe {
-            while core::ptr::read_volatile(AUX_MU_LSR as *const u32) & LSR_TX_EMPTY == 0 {}
-            core::ptr::write_volatile(AUX_MU_IO as *mut u32, u32::from(byte));
+fn putc(port: &DebugPort, byte: u8) {
+    // SAFETY: the mini-UART registers are device memory, mapped 1:1
+    // while the MMU is off.
+    unsafe {
+        while core::ptr::read_volatile((port.base + AUX_MU_LSR) as *const u32) & LSR_TX_EMPTY == 0 {
         }
+        core::ptr::write_volatile((port.base + AUX_MU_IO) as *mut u32, u32::from(byte));
     }
 }
+
+/// The mini-UART as a debug device, `-D miniuart`.
+pub const DRIVER: DebugDriver = DebugDriver {
+    name: "miniuart",
+    defaults: DebugPort {
+        base: BASE,
+        shift: 0,
+        baud: 115_200,
+        clk: 0,
+    },
+    init,
+    putc,
+    size: 0x100,
+    display_char: &DISPLAY_CHAR,
+    poll_key: &POLL_KEY,
+    break_detect: &BREAK_DETECT,
+};
 
 // ANCHOR: miniuart_callouts
 // The kernel's debug callouts, patched with the registers' virtual
