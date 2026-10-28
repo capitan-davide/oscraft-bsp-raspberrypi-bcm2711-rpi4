@@ -19,14 +19,15 @@ includes nothing. This script makes every reference a hard error instead:
 - every anchor in that tree is used by some chapter;
 - every path written in a code span exists;
 - every source file is listed in the source map;
-- links to the other book point to one of its chapters.
+- links to another book point to one of its chapters.
 
-The configuration is the constants below; the other book has a copy of
-this script with its own.
+The configuration is the constants below; the startup library's book has
+a copy of this script with its own.
 
 Usage: python3 -I check.py   (exit status 1 on any error)
 """
 
+import os
 import re
 import subprocess
 import sys
@@ -36,8 +37,8 @@ BOOK = Path(__file__).resolve().parent
 SRC = BOOK / "src"
 
 # ANCHOR: check_config
-# The BSP book: its tree is the repository, without the startup library,
-# which has its own book. Paths in code spans are relative to the repository.
+# The BSP book: its tree is the repository. Paths in code spans are
+# relative to it.
 ROOT = BOOK.parent.parent
 # Anchors of these paths (relative to ROOT) must be used by this book.
 ANCHOR_SCOPE = ["startup-bcm2711-rpi4", "tools", "images", "Makefile", "docs/book/check.py"]
@@ -48,7 +49,9 @@ SOURCES = ["startup-bcm2711-rpi4/src", "tools", "images", "Makefile"]
 PATH_SPAN = re.compile(r"`((?:startup-bcm2711-rpi4|tools|images|docs)/[\w./-]*|Makefile)`")
 # Links to the other book, and where its chapters are (None: not checked).
 OTHER_BOOK_LINK = re.compile(r"\]\(\.\./startup/([\w-]+)\.html")
-OTHER_BOOK_SRC = ROOT / "oscraft-startup" / "book" / "src"
+# The startup library's book is in the library's repository: the Makefile
+# passes where cargo has it.
+OTHER_BOOK_SRC = Path(os.environ["OTHER_BOOK_SRC"]) if "OTHER_BOOK_SRC" in os.environ else None
 # ANCHOR_END: check_config
 
 INCLUDE = re.compile(r"\{\{#(include|rustdoc_include)\s+([^}\s]+)\s*\}\}")
@@ -93,7 +96,7 @@ def main():
                 if not target.is_file():
                     errors.append(f"{where}: no such file {path}")
                     continue
-                if not target.is_relative_to(ROOT) or target.is_relative_to(ROOT / "oscraft-startup"):
+                if not target.is_relative_to(ROOT):
                     errors.append(f"{where}: {path} is outside the book's tree")
                     continue
                 if not anchor:

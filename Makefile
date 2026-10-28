@@ -21,6 +21,17 @@ STARTUP_DIR := $(BUILD)/startup
 STARTUP     := $(STARTUP_DIR)/startup-bcm2711-rpi4
 IMAGE       := $(BUILD)/rpi4.ifs
 
+# The startup library, oscraft-startup, is a git dependency of the board
+# crate. OSCRAFT_STARTUP=<dir> uses a local checkout of it instead, for
+# working on both at once. (Cargo then records it in Cargo.lock: build
+# once without it before committing the lock file.)
+ifneq ($(OSCRAFT_STARTUP),)
+CARGO_FLAGS += --config 'patch."https://github.com/capitan-davide/oscraft-startup".oscraft-startup.path="$(abspath $(OSCRAFT_STARTUP))"'
+endif
+# The library's directory, wherever cargo has it: for its linker script and
+# its book.
+STARTUP_SRC = $(shell cargo metadata $(CARGO_FLAGS) --format-version 1 | python3 -I -c 'import json, sys; print(next(p["manifest_path"] for p in json.load(sys.stdin)["packages"] if p["name"] == "oscraft-startup").rsplit("/", 1)[0])')
+
 # The first command of a recipe that needs the SDP.
 need_sdp = @test -n "$(QNX_TARGET)" || { echo "QNX_TARGET is not set: source qnxsdp-env.sh from the QNX SDP 8.0 first" >&2; exit 1; }
 
@@ -47,19 +58,19 @@ define mkifs
 	MKIFS_PATH=$(subst $(space),:,$(strip $(1) $(BSP_PATH) $(SDP_PATH))) mkifs $@.build $@
 endef
 
-.PHONY: all startup image run test unit-test qemu-test abi-layout book book-check book-serve qemu bsp qnx-reference qnx-reference-run clean
+.PHONY: all startup image run test unit-test qemu-test book book-check book-serve qemu bsp qnx-reference qnx-reference-run clean
 
 all: image qemu
 
 # ANCHOR: make_startup
 # The startup program: the board crate as a static library, partially
-# linked (ld -r) into the one relocatable object mkifs links into the
-# image. -u _start pulls in the entry point and, from there, everything
-# it uses.
+# linked (ld -r) with the library's linker script into the one
+# relocatable object mkifs links into the image. -u _start pulls in the
+# entry point and, from there, everything it uses.
 startup:
-	cargo build -p startup-bcm2711-rpi4 --target $(TARGET) --profile $(PROFILE)
+	cargo build $(CARGO_FLAGS) -p startup-bcm2711-rpi4 --target $(TARGET) --profile $(PROFILE)
 	@mkdir -p $(STARTUP_DIR)
-	$(LLD) -r -u _start -T oscraft-startup/startup.ld -o $(STARTUP) $(STARTUP_LIB)
+	$(LLD) -r -u _start -T $(STARTUP_SRC)/startup.ld -o $(STARTUP) $(STARTUP_LIB)
 # ANCHOR_END: make_startup
 
 # The image, with our startup: build/startup comes first in mkifs's path.
@@ -75,10 +86,10 @@ run: $(IMAGE) qemu
 # All tests: the unit tests on the host, then the image booted in QEMU.
 test: unit-test qemu-test
 
-# Host unit tests (layouts, parsers, the system page builder, the board's
-# revision codes).
+# The board crate's unit tests, on the host. (The library has its own, in
+# its repository.)
 unit-test:
-	cargo test -p oscraft-startup -p startup-bcm2711-rpi4
+	cargo test $(CARGO_FLAGS) -p startup-bcm2711-rpi4
 
 # Boot the image in QEMU and check QNX comes up on all 4 CPUs
 # (QEMU_TEST_IMAGE=build/qnx-reference.ifs checks QNX's own startup).
@@ -87,24 +98,16 @@ qemu-test: $(QEMU_TEST_IMAGE) qemu
 	python3 -I tools/qemu/test.py $(QEMU_TEST_IMAGE) 4
 # ANCHOR_END: make_test
 
-# Regenerate oscraft-startup/abi/layout.txt from the SDP's headers: the
-# layout the Rust ABI types are tested against.
-ABI_DIR := oscraft-startup/abi
-abi-layout:
-	$(need_sdp)
-	@mkdir -p $(BUILD)
-	ntoaarch64-gcc -c $(ABI_DIR)/layout.c -o $(BUILD)/layout.o
-	python3 -I $(ABI_DIR)/layout.py ntoaarch64-nm $(BUILD)/layout.o $(ABI_DIR)/layout.txt
-
-# The two books: the BSP's (docs/book) and the startup library's
-# (oscraft-startup/book), built side by side into build/book/.
-BOOKS := docs/book oscraft-startup/book
+# The two books, built side by side into build/book/: the BSP's
+# (docs/book), and the startup library's, from the library's source,
+# which the BSP's book links to.
 book: book-check
-	for b in $(BOOKS); do mdbook build $$b || exit 1; done
+	mdbook build docs/book
+	mdbook build $(STARTUP_SRC)/docs/book -d $(abspath $(BUILD))/book/startup
 	cp docs/book/index.html $(BUILD)/book/index.html
 
 book-check:
-	for b in $(BOOKS); do python3 -I $$b/check.py || exit 1; done
+	OTHER_BOOK_SRC=$(STARTUP_SRC)/docs/book/src python3 -I docs/book/check.py
 
 book-serve: book
 	python3 -I -m http.server --directory $(BUILD)/book 3001

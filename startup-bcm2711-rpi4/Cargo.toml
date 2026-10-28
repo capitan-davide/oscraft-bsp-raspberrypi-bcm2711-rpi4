@@ -12,4 +12,4 @@ license.workspace = true
 crate-type = ["staticlib"]
 
 [dependencies]
-oscraft-startup = { path = "../oscraft-startup" }
+oscraft-startup = { git = "https://github.com/capitan-davide/oscraft-startup" }

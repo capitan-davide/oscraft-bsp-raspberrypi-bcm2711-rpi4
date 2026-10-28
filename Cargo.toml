@@ -1,6 +1,6 @@
 [workspace]
 resolver = "3"
-members = ["oscraft-startup", "startup-bcm2711-rpi4"]
+members = ["startup-bcm2711-rpi4"]
 
 [workspace.package]
 version = "0.1.0"
