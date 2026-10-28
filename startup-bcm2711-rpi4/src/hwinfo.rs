@@ -48,7 +48,6 @@ pub fn init_hwinfo(s: &mut Startup) {
         hw.add_item(st, "Device", "bcm2711-sdmmc", bus, &4u32.to_le_bytes());
         hw.add_location(st, base, size, 0, HWI_NULL_OFF);
     }
-    hw.finish();
 }
 // ANCHOR_END: init_hwinfo
 
