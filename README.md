@@ -5,11 +5,11 @@ a startup program written in Rust. QNX's unmodified kernel,
 `procnto-smp-instr`, comes up on all four cores and runs the boot script
 to a shell.
 
-- `oscraft-startup/`: the startup library, a Rust counterpart of QNX's
-  `libstartup.a` with no board code. It has its own book and will move to
-  its own repository (`oscraft-startup-rs`).
 - `startup-bcm2711-rpi4/`: the board crate, which builds
-  `startup-bcm2711-rpi4`.
+  `startup-bcm2711-rpi4`. It uses the startup library,
+  [oscraft-startup](https://github.com/capitan-davide/oscraft-startup), a
+  Rust counterpart of QNX's `libstartup.a`, as a git dependency;
+  `make OSCRAFT_STARTUP=<dir> ...` uses a local checkout of it instead.
 - `images/rpi4.build`: the boot image.
 - `tools/qemu/`: booting and testing the image in QEMU's `raspi4b`.
 - `docs/book/`: the BSP's book.

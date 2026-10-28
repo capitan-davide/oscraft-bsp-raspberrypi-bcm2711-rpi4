@@ -37,11 +37,21 @@ in QEMU, and run the tests.
 | `make qnx-reference` | Builds the same image with QNX's startup, `build/qnx-reference.ifs` |
 | `make qnx-reference-run` | Boots it in QEMU |
 | `make book` | Checks and builds both books into `build/book/` |
-| `make abi-layout` | Regenerates the library's ABI layout table from the SDP's headers |
 
 `STARTUP_OPTS` sets the startup's options in the image, for example
 `make run STARTUP_OPTS="-vvv -D miniuart -u reg"` for more output.
 `PROFILE=dev` builds the startup without optimizations.
+
+The startup library is a git dependency of the board crate, which
+`Cargo.lock` pins to one commit; `cargo update -p oscraft-startup` moves
+it to the latest. To work on the library and the board at once,
+`OSCRAFT_STARTUP=../oscraft-startup` makes every target use a local
+checkout of the library instead.
+
+> [!WARNING]
+> With `OSCRAFT_STARTUP`, cargo records the local checkout in
+> `Cargo.lock`. Commit a lock file only after a build without it, which
+> puts the git source back.
 
 ## Building the startup
 
@@ -49,7 +59,8 @@ QNX's `mkifs` does not take an executable for startup: it takes a
 *relocatable object* and links it itself, at the address where startup
 lands in the image (the library's book,
 [Chapter 2](../startup/02-image.html)). The Makefile makes one from the
-board crate, which is built as a static library (Listing 2.1).
+board crate, which is built as a static library, with the library's
+linker script, wherever cargo has the library (Listing 2.1).
 
 *Listing 2.1: Building the startup program (`Makefile`).*
 
@@ -116,10 +127,10 @@ QNX 8.0.0 on RaspberryPi4B, 4 CPUs
 {{#include ../../../Makefile:make_test}}
 ```
 
-The **unit tests** run on the host: the library's (its binary interface
-against QNX's headers, its parsers and builders; see the library's book,
-[Chapter 15](../startup/15-testing.html)) and the board crate's (decoding
-the board revision).
+The **unit tests** of the board crate (decoding the board revision) run
+on the host. The library's tests (its binary interface against QNX's
+headers, its parsers and builders) are in its repository; see its book,
+[Chapter 15](../startup/15-testing.html).
 
 The **QEMU test**, `tools/qemu/test.py`, boots the image and checks the
 boot script's banner, the shell prompt, that `pidin info` lists four

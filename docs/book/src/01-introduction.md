@@ -31,17 +31,19 @@ compatible with it; nothing in this BSP requires OsCraft's kernel.
 
 ## What is in the repository
 
-Figure 1.1 shows the parts of the repository and what comes from QNX.
+Figure 1.1 shows the parts of the BSP and what comes from QNX. The
+startup library is not in this repository: it has its own,
+[oscraft-startup](https://github.com/capitan-davide/oscraft-startup), and
+the board crate depends on it through git.
 
 ![The repository, and what comes from QNX](images/ch01-architecture.svg)
 
-*Figure 1.1: The repository's parts, and what comes from QNX.*
+*Figure 1.1: The BSP's parts, and what comes from QNX.*
 
 *Table 1.1: The repository.*
 
 | Path | Contents |
 |---|---|
-| `oscraft-startup/` | The startup library, with its own book and tests |
 | `startup-bcm2711-rpi4/` | The board crate: the Raspberry Pi 4's startup |
 | `images/rpi4.build` | The build file of the boot image |
 | `tools/qemu/` | Booting the image in QEMU, and testing it there |
@@ -63,11 +65,11 @@ The startup code is split in two crates, the way QNX splits it between
   holds the other cores, the watchdog that resets the board, the devices
   the drivers look for. Its `main()` calls the library in order.
 
-The library will move to a repository of its own, `oscraft-startup-rs`,
-once a second board uses it. To make that easy, it is self-contained in
-`oscraft-startup/`, with its tests and its own book, which describes the
-library without board code (it uses boards only as examples). This book
-covers the rest, and refers to the library's book for the library.
+The library lives in a repository of its own, so that other boards can
+use it, with its tests and its own book, which describes the library
+without board code (it uses boards only as examples). This book covers
+the rest, and refers to the library's book for the library; `make book`
+builds the two side by side (Chapter 2).
 
 ## What comes from QNX
 

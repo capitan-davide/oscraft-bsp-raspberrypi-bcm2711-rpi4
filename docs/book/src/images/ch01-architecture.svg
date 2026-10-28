@@ -15,13 +15,13 @@
   <rect width="820" height="420" fill="#ffffff"/>
   <!-- this repository -->
   <rect class="frame" x="16" y="16" width="470" height="388" rx="8"/>
-  <text class="b" x="30" y="38">This repository</text>
+  <text class="b" x="30" y="38">The BSP</text>
   <rect class="k" x="36" y="54" width="210" height="96" rx="6"/>
   <text class="t b" x="141" y="76">oscraft-startup</text>
   <text class="t s" x="141" y="94">the startup library: system page,</text>
   <text class="t s" x="141" y="108">callouts, MMU, SMP, loading</text>
   <text class="t s" x="141" y="122">(no board code)</text>
-  <text class="t m" x="141" y="140">+ its book</text>
+  <text class="t m" x="141" y="140">own repository, + book</text>
   <rect class="k" x="266" y="54" width="200" height="96" rx="6"/>
   <text class="t b" x="366" y="76">startup-bcm2711-rpi4</text>
   <text class="t s" x="366" y="94">the board crate: mailbox, RAM,</text>
@@ -41,9 +41,9 @@
   <rect class="n" x="266" y="266" width="200" height="62" rx="6"/>
   <text class="t b" x="366" y="288">docs/book</text>
   <text class="t s" x="366" y="306">this book</text>
-  <text class="s" x="36" y="356">The library moves to its own repository (oscraft-startup-rs)</text>
-  <text class="s" x="36" y="370">with its book when a second board uses it; the board crate</text>
-  <text class="s" x="36" y="384">then depends on it as an external crate.</text>
+  <text class="s" x="36" y="356">oscraft-startup is a repository of its own, with its book;</text>
+  <text class="s" x="36" y="370">the board crate depends on it through git. The rest is this</text>
+  <text class="s" x="36" y="384">repository.</text>
   <!-- from QNX -->
   <rect class="frame" x="510" y="16" width="294" height="388" rx="8"/>
   <text class="b" x="524" y="38">From QNX (SDP 8.0, RPi4 BSP)</text>
