@@ -46,7 +46,7 @@ define mkifs
 	MKIFS_PATH=$(subst $(space),:,$(strip $(1) $(BSP_PATH) $(SDP_PATH))) mkifs $@.build $@
 endef
 
-.PHONY: all startup image run test unit-test qemu-test abi-layout qemu bsp qnx-reference qnx-reference-run clean
+.PHONY: all startup image run test unit-test qemu-test abi-layout book book-check book-serve qemu bsp qnx-reference qnx-reference-run clean
 
 all: image qemu
 
@@ -93,6 +93,19 @@ abi-layout:
 	@mkdir -p $(BUILD)
 	ntoaarch64-gcc -c $(ABI_DIR)/layout.c -o $(BUILD)/layout.o
 	python3 -I $(ABI_DIR)/layout.py ntoaarch64-nm $(BUILD)/layout.o $(ABI_DIR)/layout.txt
+
+# The two books: the BSP's (docs/book) and the startup library's
+# (oscraft-startup/book), built side by side into build/book/.
+BOOKS := docs/book oscraft-startup/book
+book: book-check
+	for b in $(BOOKS); do mdbook build $$b || exit 1; done
+	cp docs/book/index.html $(BUILD)/book/index.html
+
+book-check:
+	for b in $(BOOKS); do python3 -I $$b/check.py || exit 1; done
+
+book-serve: book
+	python3 -I -m http.server --directory $(BUILD)/book 3001
 
 # QEMU support files: firmware stub and device tree.
 qemu: $(QEMU_DIR)/fwstub.elf $(QEMU_DIR)/bcm2711-rpi-4-b.dtb
