@@ -20,6 +20,7 @@ const STATUS_EMPTY: u32 = 1 << 30;
 const CHANNEL_PROPERTY: u32 = 8;
 
 const TAG_BOARD_REVISION: u32 = 0x0001_0002;
+const TAG_MAC_ADDRESS: u32 = 0x0001_0003;
 const TAG_BOARD_SERIAL: u32 = 0x0001_0004;
 const TAG_VC_MEMORY: u32 = 0x0001_0006;
 const TAG_CLOCK_RATE: u32 = 0x0003_0002;
@@ -71,6 +72,13 @@ pub fn board_revision() -> u32 {
 pub fn board_serial() -> u64 {
     let [lo, hi] = call(TAG_BOARD_SERIAL, [0, 0]);
     u64::from(hi) << 32 | u64::from(lo)
+}
+
+/// The Ethernet controller's MAC address.
+pub fn mac_address() -> [u8; 6] {
+    let [lo, hi] = call(TAG_MAC_ADDRESS, [0, 0]);
+    let (a, b) = (lo.to_le_bytes(), hi.to_le_bytes());
+    [a[0], a[1], a[2], a[3], b[0], b[1]]
 }
 
 /// The RAM the VideoCore keeps for itself: (base, size).

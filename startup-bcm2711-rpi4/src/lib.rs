@@ -8,6 +8,8 @@
 #[cfg(target_arch = "aarch64")]
 mod board;
 #[cfg(target_arch = "aarch64")]
+mod hwinfo;
+#[cfg(target_arch = "aarch64")]
 mod mbox;
 #[cfg(target_arch = "aarch64")]
 mod miniuart;

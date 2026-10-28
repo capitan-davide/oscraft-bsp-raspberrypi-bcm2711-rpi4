@@ -3,7 +3,7 @@
 use crate::{mbox, miniuart, pm, revision};
 use oscraft_startup::arch::aarch64::gic_v2;
 use oscraft_startup::cmdline::{Opt, parse_number};
-use oscraft_startup::syspage::{hwinfo, strings};
+use oscraft_startup::syspage::strings;
 use oscraft_startup::{Startup, console, kprintln};
 
 /// Options of this board, besides the common ones: `-W [ms]` starts the
@@ -134,8 +134,7 @@ fn main(s: &mut Startup) -> ! {
         strings::CS_HW_SERIAL,
         hex(mbox::board_serial(), &mut serial),
     );
-    hwinfo::add_default(&mut sp.hwinfo, &mut sp.strings);
-    sp.hwinfo.finish();
+    crate::hwinfo::init_hwinfo(s);
     s.boot()
 }
 // ANCHOR_END: board_main
