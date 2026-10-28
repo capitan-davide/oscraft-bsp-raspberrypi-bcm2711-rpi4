@@ -30,8 +30,10 @@ make qnx-reference  # the same image with QNX's own startup
 make book           # both books, in build/book/
 ```
 
-The books explain everything else: start with `docs/book` (`make book`,
-then open `build/book/index.html`).
+The books explain everything else. They are published at
+<https://capitan-davide.github.io/oscraft-bsp-raspberrypi-bcm2711-rpi4/>
+(the BSP's and the startup library's); `make book` builds them locally,
+into `build/book/`.
 
 ## Status
 

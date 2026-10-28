@@ -28,8 +28,10 @@ what QNX's original startup does, and weigh anything beyond it.
 
 - [ ] A `LICENSE` file (Apache-2.0) in both repositories.
 - [ ] Tag `oscraft-startup` v0.1.0 and pin the BSP to it.
-- [ ] Continuous integration on GitHub, for both repositories: unit tests,
-      clippy, formatting, the book checks (none needs the QNX SDP).
+- [x] The books checked, built and published on GitHub Pages, in both
+      repositories.
+- [ ] Continuous integration for the code too, in both repositories: unit
+      tests, clippy, formatting (none needs the QNX SDP).
 
 ## The rest of the BSP: drivers
 
