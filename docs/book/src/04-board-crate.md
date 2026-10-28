@@ -43,7 +43,7 @@ In order:
 2. **The options**: the library's, plus `-W`, which starts the watchdog
    (Chapter 6).
 3. **The board revision and the ARM clock** come from the GPU's firmware,
-   through the mailbox (Chapter 5).
+   through the mailbox, and with `-vvvv` its diagnostics (Chapter 5).
 4. **Four CPUs**, released through the spin table (Chapter 7).
 5. **The RAM**, from the board revision and the mailbox (Chapter 5).
 6. **The page tables**, by the library.

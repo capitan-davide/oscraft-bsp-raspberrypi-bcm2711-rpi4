@@ -42,8 +42,9 @@ not depend on.
 
 ## What is missing
 
-- **Hypervisor support and compressed images**, which QNX's startup
-  library has and the BSP does not use.
+- **QNX Hypervisor (`-Q`) and restoring an image file system across a
+  warm reset (`-I`, `-i`)**, which QNX's startup library has: the library
+  reports them as unsupported (its book's Appendix A).
 - **The board itself.** Everything above was checked in QEMU. QEMU models
   the BCM2711's peripherals that startup touches, but not their timing or
   every detail. The reboot and the watchdog, UART3 (`-D pl011-3`, which
@@ -52,6 +53,17 @@ not depend on.
   `-u arg` under U-Boot can only be checked on the board.
 
 ## Checked in QEMU besides the comparison
+
+- An image compressed with mkifs's default, UCL (`[virtual=aarch64le,raw
+  +compress]`), boots to the shell on 4 CPUs.
+- The common options take effect: for example `-R 1m,,fb` sets RAM aside
+  at the top, `-c` adds clusters, `-E spectrev2` sets the A72's
+  mitigation flag, `-E meltdown` boots with non-global mappings, and `-o`
+  adds the nanospin device.
+- At `-vvvv`, the firmware's diagnostics print the same temperature and
+  clocks as QNX's startup's. QEMU does not answer the voltage and power
+  requests: ours print 0, QNX's the values left in its buffer by the
+  previous request.
 
 - `-D pl011` moves startup's output and the kernel's to UART0, QEMU's
   first serial port; an unknown `-D` name keeps the default, with a

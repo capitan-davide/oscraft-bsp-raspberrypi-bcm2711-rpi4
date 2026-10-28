@@ -56,6 +56,17 @@ The board crate asks for five things:
 | `0x00030002` clock rate, ARM | Hz | The CPUs' speed in cpuinfo |
 | `0x00010003` MAC address | 6 bytes | The Ethernet controller's hwinfo (Chapter 8) |
 
+With `-vvvv`, startup also prints what the firmware reports about the
+board, as QNX's startup does (Listing 5.2): useful when a board misbehaves
+because of power or temperature. A request the firmware does not answer
+(QEMU answers few of them) prints 0.
+
+*Listing 5.2: The firmware's diagnostics (`startup-bcm2711-rpi4/src/mbox.rs`).*
+
+```rust
+{{#include ../../../startup-bcm2711-rpi4/src/mbox.rs:diagnostics}}
+```
+
 ## The board revision
 
 The revision code describes the board in bit fields:
@@ -67,9 +78,9 @@ type (0x11 for a Pi 4 B). `revision.rs` decodes it, with unit tests; QEMU's
 ## The RAM
 
 With the revision's RAM size and the GPU's share from the mailbox,
-`init_ram()` (Listing 5.2) describes the RAM as QNX's own BSP does.
+`init_ram()` (Listing 5.3) describes the RAM as QNX's own BSP does.
 
-*Listing 5.2: Describing the RAM, `init_ram()` (`startup-bcm2711-rpi4/src/board.rs`).*
+*Listing 5.3: Describing the RAM, `init_ram()` (`startup-bcm2711-rpi4/src/board.rs`).*
 
 ```rust
 {{#include ../../../startup-bcm2711-rpi4/src/board.rs:init_ram}}
