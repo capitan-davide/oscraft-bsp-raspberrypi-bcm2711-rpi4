@@ -2,33 +2,28 @@
 
 #![no_std]
 
-use oscraft_startup::Board;
+mod miniuart;
 
-/// The mini-UART (UART1), the console on GPIO 14/15.
-const AUX_MU_IO: usize = 0xfe21_5040;
-const AUX_MU_LSR: usize = 0xfe21_5054;
-const LSR_TX_EMPTY: u32 = 1 << 5;
+use oscraft_startup::cmdline::Opt;
+use oscraft_startup::{Startup, console, kprintln};
 
-struct Rpi4;
+/// Options of this board, besides the common ones: `-W` enables the
+/// watchdog.
+const BOARD_OPTIONS: &str = "W:";
 
-impl Board for Rpi4 {
-    fn debug_putc(&self, byte: u8) {
-        // SAFETY: the mini-UART registers are device memory, mapped 1:1
-        // while the MMU is off.
-        unsafe {
-            while core::ptr::read_volatile(AUX_MU_LSR as *const u32) & LSR_TX_EMPTY == 0 {}
-            core::ptr::write_volatile(AUX_MU_IO as *mut u32, u32::from(byte));
+fn main(s: &mut Startup) -> ! {
+    console::set(&miniuart::MINIUART);
+    for opt in s.options(BOARD_OPTIONS) {
+        match opt {
+            Opt::Flag('W', _) => {}
+            other => s.handle_common_option(&other),
         }
     }
-}
-
-fn main() -> ! {
-    for &b in b"startup-bcm2711-rpi4: hello\r\n" {
-        Rpi4.debug_putc(b);
-    }
-    loop {
-        core::hint::spin_loop();
-    }
+    kprintln!("startup-bcm2711-rpi4: debug level {}", s.debug_level);
+    kprintln!("startup header at {:#x}: {:#x?}", s.shdr_paddr, s.shdr);
+    kprintln!("argv {:?}", s.cmdline.argv.as_slice());
+    kprintln!("x0-x3 {:#x?}", s.boot_regs);
+    oscraft_startup::crash!("not implemented yet");
 }
 
 oscraft_startup::entry!(main);
