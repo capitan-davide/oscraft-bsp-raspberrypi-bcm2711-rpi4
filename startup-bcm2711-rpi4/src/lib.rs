@@ -19,10 +19,12 @@ fn main(s: &mut Startup) -> ! {
             other => s.handle_common_option(&other),
         }
     }
-    kprintln!("startup-bcm2711-rpi4: debug level {}", s.debug_level);
-    kprintln!("startup header at {:#x}: {:#x?}", s.shdr_paddr, s.shdr);
-    kprintln!("argv {:?}", s.cmdline.argv.as_slice());
-    kprintln!("x0-x3 {:#x?}", s.boot_regs);
+    kprintln!(
+        "startup-bcm2711-rpi4: EL{}, debug level {}, argv {:?}",
+        oscraft_startup::arch::aarch64::current_el(),
+        s.debug_level,
+        s.cmdline.argv.as_slice()
+    );
     oscraft_startup::crash!("not implemented yet");
 }
 
