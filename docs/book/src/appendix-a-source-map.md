@@ -8,11 +8,12 @@ explains it. The library's files are in its own book's source map.
 | File | Contents | Chapter |
 |---|---|---|
 | `startup-bcm2711-rpi4/src/lib.rs` | The board crate's root | 4 |
-| `startup-bcm2711-rpi4/src/board.rs` | `main()`, the RAM layout, the spin table | 4, 5, 7 |
+| `startup-bcm2711-rpi4/src/board.rs` | `main()`, the debug UARTs, the RAM layout, the spin table | 4, 5, 6, 7 |
 | `startup-bcm2711-rpi4/src/mbox.rs` | The VideoCore mailbox | 5 |
 | `startup-bcm2711-rpi4/src/revision.rs` | Decoding the board revision | 5 |
 | `startup-bcm2711-rpi4/src/miniuart.rs` | The mini-UART and its callouts | 6 |
 | `startup-bcm2711-rpi4/src/pm.rs` | The watchdog and the reboot callout | 6 |
+| `startup-bcm2711-rpi4/src/msi.rs` | The PCI Express MSI controller | 7 |
 | `startup-bcm2711-rpi4/src/hwinfo.rs` | The devices in hwinfo | 8 |
 | `images/rpi4.build` | The boot image's build file | 2 |
 | `tools/qemu/fwstub/fwstub.S` | The firmware stub for QEMU | 3 |

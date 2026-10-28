@@ -32,7 +32,7 @@ the startup program. Both boot in QEMU. Three comparisons follow:
 | `asinfo` | The same tree; the free RAM is the same to the kernel (1952 MB of 2048) |
 | `hwinfo` | The same entries and tags |
 | `typed_strings` | The same, but for the serial number: QEMU provides none, and ours reports zeros where QNX's startup reports the board revision code |
-| `intrinfo` | The same GIC entries; QNX's has a third entry, the PCI Express MSI controller |
+| `intrinfo` | The same three entries: the GIC's two and the PCI Express MSI controller's; our MSI `id` callout is 8 bytes shorter (two instructions of a bounds check that cannot fail) |
 | `callout`, `smp` | Different addresses, the same roles |
 | `gicr_map` | Zeros; QNX's has leftover values (it is for GICv3 only) |
 | `TCR_EL1` | The same, `0x14b5183519` |
@@ -42,19 +42,22 @@ not depend on.
 
 ## What is missing
 
-- **The PCI Express MSI controller.** QNX's startup adds it as a third
-  interrupt controller, cascaded into the GIC, with callouts of its own.
-  The PCI server needs it, and through it USB, which the Raspberry Pi 4
-  connects over PCI Express.
-- **`-D` and `-u arg`.** The console is always the mini-UART, and the
-  device tree's address comes from `x0` or a fixed address; QNX's startup
-  can switch to a PL011 UART and take the address from U-Boot's argument.
 - **Hypervisor support and compressed images**, which QNX's startup
   library has and the BSP does not use.
 - **The board itself.** Everything above was checked in QEMU. QEMU models
   the BCM2711's peripherals that startup touches, but not their timing or
-  every detail; the reboot and the watchdog, in particular, can only be
-  checked on the board.
+  every detail. The reboot and the watchdog, UART3 (`-D pl011-3`, which
+  has no serial port in QEMU's `raspi4b`), the MSI controller under a real
+  PCI device, and
+  `-u arg` under U-Boot can only be checked on the board.
+
+## Checked in QEMU besides the comparison
+
+- `-D pl011` moves startup's output and the kernel's to UART0, QEMU's
+  first serial port; an unknown `-D` name keeps the default, with a
+  message.
+- `-u arg` without U-Boot's arguments reports that it finds no device
+  tree address, and the boot goes on without the device tree.
 
 > [!WARNING]
 > When the BSP runs on the board, check the `display_char` callout's

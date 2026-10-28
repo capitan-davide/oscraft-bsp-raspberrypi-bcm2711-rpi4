@@ -88,6 +88,5 @@ edit it; QEMU's mailbox answers the questions that matter (Chapter 5).
 > With the firmware stub, the same image boots on the board and in QEMU,
 > with the same startup options (`-u reg`: the device tree's address is in
 > `x0`). An image started by U-Boot's `go` command gets the device tree's
-> address as an argument instead; QNX's startup reads it there with
-> `-u arg`, which this startup does not support yet (`-u <addr>` with a
-> fixed address works).
+> address as an argument instead, and takes `-u arg`, as with QNX's
+> startup.

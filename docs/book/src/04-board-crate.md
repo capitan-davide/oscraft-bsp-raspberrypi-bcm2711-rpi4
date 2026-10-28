@@ -10,11 +10,12 @@ following chapters take apart.
 
 | Module | Contents | Chapter |
 |---|---|---|
-| `startup-bcm2711-rpi4/src/board.rs` | `main()`, the RAM layout, the spin table | 4, 5, 7 |
+| `startup-bcm2711-rpi4/src/board.rs` | `main()`, the debug UARTs, the RAM layout, the spin table | 4, 5, 6, 7 |
 | `startup-bcm2711-rpi4/src/mbox.rs` | The VideoCore mailbox | 5 |
 | `startup-bcm2711-rpi4/src/revision.rs` | Decoding the board revision | 5 |
 | `startup-bcm2711-rpi4/src/miniuart.rs` | The mini-UART: startup's console, the kernel's debug callouts | 6 |
 | `startup-bcm2711-rpi4/src/pm.rs` | The watchdog and the reboot callout | 6 |
+| `startup-bcm2711-rpi4/src/msi.rs` | The PCI Express MSI controller | 7 |
 | `startup-bcm2711-rpi4/src/hwinfo.rs` | The devices in hwinfo | 8 |
 | `startup-bcm2711-rpi4/src/lib.rs` | The crate root | 4 |
 
@@ -37,7 +38,7 @@ each step.
 
 In order:
 
-1. **The console** is the mini-UART, which the firmware has set up
+1. **The debug UARTs**: the mini-UART by default, two PL011s for `-D`
    (Chapter 6).
 2. **The options**: the library's, plus `-W`, which starts the watchdog
    (Chapter 6).
@@ -46,10 +47,12 @@ In order:
 4. **Four CPUs**, released through the spin table (Chapter 7).
 5. **The RAM**, from the board revision and the mailbox (Chapter 5).
 6. **The page tables**, by the library.
-7. **The GIC-400** at its addresses, and the **timer**'s PPI (Chapter 7).
+7. **The GIC-400** at its addresses, the **MSI controller** cascaded into
+   it, and the **timer**'s PPI (Chapter 7).
 8. **The boot CPU**, at the ARM clock's speed.
-9. **The kernel's debug channel and reboot**: the mini-UART's and the
-   watchdog's callouts (Chapter 6).
+9. **Reboot**: the watchdog's callout (Chapter 6). The kernel's debug
+   channel needs nothing here: the library gives the kernel the debug UART
+   startup uses.
 10. **The strings** `uname` and `confstr()` report: the board, its maker,
     the SoC, the serial number.
 11. **The devices** for the drivers (Chapter 8).

@@ -35,6 +35,6 @@ then open `build/book/index.html`).
 
 ## Status
 
-Tested in QEMU, where the system page matches QNX's own startup's except
-for the PCI Express MSI controller, which is not described yet. Not yet
-run on the board.
+Tested in QEMU, where the system page matches QNX's own startup's (the
+book's "Matching QNX's Startup" chapter lists the small differences).
+Not yet run on the board.
