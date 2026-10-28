@@ -11,6 +11,15 @@ LLD   ?= ld.lld
 QEMU_DIR := $(BUILD)/qemu
 BSP_DIR  := $(BUILD)/bsp
 
+# The Rust startup: cargo profile "release" (default) or "dev".
+TARGET      := aarch64-unknown-none-softfloat
+PROFILE     ?= release
+PROFILE_DIR := $(if $(filter dev,$(PROFILE)),debug,$(PROFILE))
+STARTUP_LIB := target/$(TARGET)/$(PROFILE_DIR)/libstartup_bcm2711_rpi4.a
+STARTUP_DIR := $(BUILD)/startup
+STARTUP     := $(STARTUP_DIR)/startup-bcm2711-rpi4
+IMAGE       := $(BUILD)/rpi4.ifs
+
 ifeq ($(QNX_TARGET),)
 $(error QNX_TARGET is not set: source qnxsdp-env.sh from the QNX SDP 8.0 first)
 endif
@@ -37,9 +46,29 @@ define mkifs
 	MKIFS_PATH=$(subst $(space),:,$(strip $(1) $(BSP_PATH) $(SDP_PATH))) mkifs $@.build $@
 endef
 
-.PHONY: all qemu bsp qnx-reference qnx-reference-run clean
+.PHONY: all startup image run qemu bsp qnx-reference qnx-reference-run clean
 
-all: qemu
+all: image qemu
+
+# ANCHOR: make_startup
+# The startup program: the board crate as a static library, partially
+# linked (ld -r) into the one relocatable object mkifs links into the
+# image. -u _start pulls in the entry point and, from there, everything
+# it uses.
+startup:
+	cargo build -p startup-bcm2711-rpi4 --target $(TARGET) --profile $(PROFILE)
+	@mkdir -p $(STARTUP_DIR)
+	$(LLD) -r -u _start -T oscraft-startup/startup.ld -o $(STARTUP) $(STARTUP_LIB)
+# ANCHOR_END: make_startup
+
+# The image, with our startup: build/startup comes first in mkifs's path.
+image: $(IMAGE)
+
+$(IMAGE): images/rpi4.build startup $(BSP_DIR)/.unpacked
+	$(call mkifs,$(abspath $(STARTUP_DIR)))
+
+run: $(IMAGE) qemu
+	tools/qemu/run.sh $< -no-reboot
 
 # QEMU support files: firmware stub and device tree.
 qemu: $(QEMU_DIR)/fwstub.elf $(QEMU_DIR)/bcm2711-rpi-4-b.dtb

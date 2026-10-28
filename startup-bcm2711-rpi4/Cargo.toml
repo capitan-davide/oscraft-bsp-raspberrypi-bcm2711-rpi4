@@ -1,0 +1,15 @@
+[package]
+name = "startup-bcm2711-rpi4"
+description = "QNX OS 8.0 startup for the Raspberry Pi 4 (BCM2711)"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+# A static library: the Makefile partially links it (ld -r) into the
+# relocatable object mkifs expects, and mkifs links that at the image's
+# address.
+[lib]
+crate-type = ["staticlib"]
+
+[dependencies]
+oscraft-startup = { path = "../oscraft-startup" }
