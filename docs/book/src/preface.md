@@ -1,8 +1,10 @@
 # Preface
 
 This book describes the OsCraft board support package (BSP) for the
-Raspberry Pi 4: what it takes to boot QNX OS 8.0 on that board with a
-startup program written in Rust, and how the BSP does it.
+Raspberry Pi 4, compatible with QNX OS 8.0: what it takes to boot QNX's
+kernel on that board with a startup program written in Rust, and how the
+BSP does it. It is not a QNX product: it implements the interfaces QNX's
+kernel and tools expect.
 
 It is a companion to [The OsCraft Startup Library](../startup/index.html),
 which explains how a QNX startup program works and how the generic

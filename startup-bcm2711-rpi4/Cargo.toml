@@ -1,6 +1,6 @@
 [package]
 name = "startup-bcm2711-rpi4"
-description = "QNX OS 8.0 startup for the Raspberry Pi 4 (BCM2711)"
+description = "Startup for the Raspberry Pi 4 (BCM2711), compatible with QNX OS 8.0"
 version.workspace = true
 edition.workspace = true
 license.workspace = true

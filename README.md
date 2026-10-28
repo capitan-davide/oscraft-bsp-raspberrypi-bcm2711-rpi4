@@ -1,7 +1,7 @@
 # OsCraft BSP for the Raspberry Pi 4 (BCM2711)
 
-A board support package that boots QNX OS 8.0 on the Raspberry Pi 4 with
-a startup program written in Rust. QNX's unmodified kernel,
+A board support package for the Raspberry Pi 4, compatible with QNX OS
+8.0, with a startup program written in Rust. QNX's unmodified kernel,
 `procnto-smp-instr`, comes up on all four cores and runs the boot script
 to a shell.
 

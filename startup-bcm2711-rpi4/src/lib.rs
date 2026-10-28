@@ -1,4 +1,4 @@
-//! QNX OS 8.0 startup for the Raspberry Pi 4 (BCM2711).
+//! Startup for the Raspberry Pi 4 (BCM2711), compatible with QNX OS 8.0.
 //!
 //! The board's part of startup: what the BCM2711 and the Raspberry Pi
 //! firmware are, on top of the generic `oscraft-startup` library.

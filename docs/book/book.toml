@@ -1,6 +1,6 @@
 [book]
 title = "The Raspberry Pi 4 BSP"
-description = "How the OsCraft board support package boots QNX OS 8.0 on the Raspberry Pi 4 with a startup written in Rust."
+description = "How the OsCraft board support package for the Raspberry Pi 4, compatible with QNX OS 8.0, boots the board with a startup written in Rust."
 authors = ["The OsCraft authors"]
 language = "en"
 src = "src"
