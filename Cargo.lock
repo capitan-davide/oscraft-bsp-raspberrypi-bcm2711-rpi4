@@ -5,7 +5,7 @@ version = 4
 [[package]]
 name = "oscraft-startup"
 version = "0.1.0"
-source = "git+https://github.com/capitan-davide/oscraft-startup#c5ca4dab35cb0431d52aa7247aff8158c95a9af9"
+source = "git+https://github.com/capitan-davide/oscraft-startup#134e9484e5d3000904c84472f7f101ebcdb8d10e"
 
 [[package]]
 name = "startup-bcm2711-rpi4"
