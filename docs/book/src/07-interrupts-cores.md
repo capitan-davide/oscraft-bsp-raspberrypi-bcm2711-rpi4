@@ -11,7 +11,9 @@ ARM's local peripherals: its distributor at `0xff841000`, its CPU
 interface at `0xff842000`. It has 224 interrupt lines: the 32 SGIs and
 PPIs, and 192 SPIs for the SoC's devices. The board passes the two
 addresses to `gic_v2::init()` (the library's book,
-[Chapter 8](../startup/08-gic.html)); a device's interrupt vector is then
+[Chapter 8](../startup/08-gic.html)), which also registers the GIC's
+part of each core's setup: `init_boot_cpu()` runs it on the boot core,
+and each other core when it starts. A device's interrupt vector is then
 its GIC interrupt ID, such as 125 for the mini-UART (SPI 93), the number
 the boot script gives `devc-serminiuart`.
 
