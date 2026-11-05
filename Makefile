@@ -2,7 +2,7 @@
 #
 # The images need the QNX SDP 8.0 environment: source qnxsdp-env.sh from
 # the SDP first, which sets QNX_HOST and QNX_TARGET and puts mkifs on the
-# PATH. The startup, the unit tests and the books do not.
+# PATH. The startup, the unit tests and the book do not.
 
 BUILD := build
 
@@ -29,7 +29,7 @@ ifneq ($(OSCRAFT_STARTUP),)
 CARGO_FLAGS += --config 'patch."https://github.com/capitan-davide/oscraft-startup".oscraft-startup.path="$(abspath $(OSCRAFT_STARTUP))"'
 endif
 # The library's directory, wherever cargo has it: for its linker script and
-# its book.
+# for checking the book's links to the library's book.
 STARTUP_SRC = $(shell cargo metadata $(CARGO_FLAGS) --format-version 1 | python3 -I -c 'import json, sys; print(next(p["manifest_path"] for p in json.load(sys.stdin)["packages"] if p["name"] == "oscraft-startup").rsplit("/", 1)[0])')
 
 # The first command of a recipe that needs the SDP.
@@ -98,13 +98,11 @@ qemu-test: $(QEMU_TEST_IMAGE) qemu
 	python3 -I tools/qemu/test.py $(QEMU_TEST_IMAGE) 4
 # ANCHOR_END: make_test
 
-# The two books, built side by side into build/book/: the BSP's
-# (docs/book), and the startup library's, from the library's source,
-# which the BSP's book links to.
+# The BSP's book, into build/book/. It links to the startup library's
+# book, published from the library's repository; the check finds those
+# chapters in the library's source.
 book: book-check
 	mdbook build docs/book
-	mdbook build $(STARTUP_SRC)/docs/book -d $(abspath $(BUILD))/book/startup
-	cp docs/book/index.html $(BUILD)/book/index.html
 
 book-check:
 	OTHER_BOOK_SRC=$(STARTUP_SRC)/docs/book/src python3 -I docs/book/check.py

@@ -27,7 +27,7 @@ hardware are only built for AArch64, so that the rest
 
 Listing 4.1 is the whole of the board's `main()`. It follows the order the
 library requires (the library's book,
-[Chapter 14](../startup/14-board-crate.html)), with the board's facts at
+[Chapter 14](https://capitan-davide.github.io/oscraft-startup/14-board-crate.html)), with the board's facts at
 each step. Figure 4.1 gives the idea first: `main()` gathers what the
 board knows from four places, and the library turns it into the system
 page, where the kernel and the drivers read it.

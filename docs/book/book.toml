@@ -6,7 +6,7 @@ language = "en"
 src = "src"
 
 [build]
-build-dir = "../../build/book/bsp"
+build-dir = "../../build/book"
 
 [output.html]
 git-repository-url = "https://github.com/capitan-davide/oscraft-bsp-raspberrypi-bcm2711-rpi4"

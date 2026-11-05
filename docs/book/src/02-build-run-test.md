@@ -22,7 +22,7 @@ in QEMU, and run the tests.
 - **`clang` and `ld.lld`**: `ld.lld` links the startup (below), `clang`
   assembles the QEMU firmware stub.
 - **QEMU** with the `raspi4b` machine (QEMU 9.0 or later).
-- **mdBook**, for the books.
+- **mdBook**, for the book.
 
 ## The Makefile
 
@@ -36,7 +36,7 @@ in QEMU, and run the tests.
 | `make test` | Runs the unit tests, then boots the image in QEMU and checks it |
 | `make qnx-reference` | Builds the same image with QNX's startup, `build/qnx-reference.ifs` |
 | `make qnx-reference-run` | Boots it in QEMU |
-| `make book` | Checks and builds both books into `build/book/` |
+| `make book` | Checks and builds this book into `build/book/` |
 
 `STARTUP_OPTS` sets the startup's options in the image, for example
 `make run STARTUP_OPTS="-vvv -D miniuart -u reg"` for more output.
@@ -58,7 +58,7 @@ checkout of the library instead.
 QNX's `mkifs` does not take an executable for startup: it takes a
 *relocatable object* and links it itself, at the address where startup
 lands in the image (the library's book,
-[Chapter 2](../startup/02-image.html)). The Makefile makes one from the
+[Chapter 2](https://capitan-davide.github.io/oscraft-startup/02-image.html)). The Makefile makes one from the
 board crate, which is built as a static library, with the library's
 linker script, wherever cargo has the library (Listing 2.1).
 
@@ -130,7 +130,7 @@ QNX 8.0.0 on RaspberryPi4B, 4 CPUs
 The **unit tests** of the board crate (decoding the board revision) run
 on the host. The library's tests (its binary interface against QNX's
 headers, its parsers and builders) are in its repository; see its book,
-[Chapter 15](../startup/15-testing.html).
+[Chapter 15](https://capitan-davide.github.io/oscraft-startup/15-testing.html).
 
 The **QEMU test**, `tools/qemu/test.py`, boots the image and checks the
 boot script's banner, the shell prompt, that `pidin info` lists four
@@ -140,11 +140,13 @@ it checks QNX's own startup the same way.
 
 ## The books
 
-`make book` checks both books before it builds them. Each book has a
-checker, `check.py`, which makes sure that every listing still names an
+`make book` checks this book before it builds it. Each of the two books
+has a checker, `check.py`, which makes sure that every listing still names an
 existing anchor in the source, that every anchor is used, that every
 source file is in the book's source map, and that each book includes code
-only from its own tree. This book's tree is the repository without the
+only from its own tree. This book's checker also makes sure that its links
+to the library's book name chapters that exist in the library version the
+BSP uses. This book's tree is the repository without the
 library (Listing 2.5); the library's book's is the library's directory,
 so that it can move with the library.
 

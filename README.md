@@ -18,7 +18,7 @@ to a shell.
 
 You need the QNX SDP 8.0 with the Raspberry Pi 4 BSP package (from the
 QNX Software Center), Rust (the toolchain in `rust-toolchain.toml`),
-`clang` and `ld.lld`, QEMU 9.0 or later, and mdBook for the books. From
+`clang` and `ld.lld`, QEMU 9.0 or later, and mdBook for the book. From
 bash:
 
 ```text
@@ -27,13 +27,14 @@ make image          # build/rpi4.ifs
 make run            # boot it in QEMU; Ctrl-A X quits
 make test           # unit tests, then a boot in QEMU on 4 CPUs
 make qnx-reference  # the same image with QNX's own startup
-make book           # both books, in build/book/
+make book           # the book, in build/book/
 ```
 
-The books explain everything else. They are published at
-<https://capitan-davide.github.io/oscraft-bsp-raspberrypi-bcm2711-rpi4/>
-(the BSP's and the startup library's); `make book` builds them locally,
-into `build/book/`.
+The book explains everything else. It is published at
+<https://capitan-davide.github.io/oscraft-bsp-raspberrypi-bcm2711-rpi4/>,
+and the startup library's at
+<https://capitan-davide.github.io/oscraft-startup/>; `make book` builds
+the BSP's locally, into `build/book/`.
 
 ## Status
 

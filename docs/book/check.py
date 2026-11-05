@@ -48,7 +48,7 @@ SOURCES = ["startup-bcm2711-rpi4/src", "tools", "images", "Makefile"]
 # Code spans that look like paths of this tree.
 PATH_SPAN = re.compile(r"`((?:startup-bcm2711-rpi4|tools|images|docs)/[\w./-]*|Makefile)`")
 # Links to the other book, and where its chapters are (None: not checked).
-OTHER_BOOK_LINK = re.compile(r"\]\(\.\./startup/([\w-]+)\.html")
+OTHER_BOOK_LINK = re.compile(r"\]\(https://capitan-davide\.github\.io/oscraft-startup/([\w-]+)\.html")
 # The startup library's book is in the library's repository: the Makefile
 # passes where cargo has it.
 OTHER_BOOK_SRC = Path(os.environ["OTHER_BOOK_SRC"]) if "OTHER_BOOK_SRC" in os.environ else None

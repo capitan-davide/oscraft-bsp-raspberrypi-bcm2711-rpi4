@@ -1,8 +1,6 @@
-# Check and build the books, and publish them on GitHub Pages: the BSP's
-# (docs/book) and, next to it, the startup library's, from the version
-# Cargo.lock pins, which the BSP's book links to. The site's index page
-# leads to both. Code changes trigger it too: the books include code by
-# anchor, and the check fails when an anchor they use was moved or removed.
+# Check the BSP's book (docs/book), build it and publish it on GitHub Pages.
+# Code changes trigger it too: the book includes code by anchor, and the
+# check fails when an anchor it uses was moved or removed.
 name: book
 
 on:
@@ -44,7 +42,8 @@ jobs:
         with:
           tool: mdbook@0.5.4
       # Cargo (from rust-toolchain.toml) fetches the startup library, whose
-      # book is built from its source; the SDP is not needed.
+      # book the check compares this book's links with; the SDP is not
+      # needed.
       - run: make book
       - uses: actions/upload-pages-artifact@v3
         if: github.event_name != 'pull_request'

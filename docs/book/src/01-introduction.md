@@ -48,7 +48,7 @@ the board crate depends on it through git.
 | `images/rpi4.build` | The build file of the boot image |
 | `tools/qemu/` | Booting the image in QEMU, and testing it there |
 | `tools/rpi4/` | Fetching the Raspberry Pi's device tree |
-| `Makefile` | Building, running, testing, the books |
+| `Makefile` | Building, running, testing, the book |
 | `docs/book/` | This book |
 
 ## Two crates, two books
@@ -68,8 +68,8 @@ The startup code is split in two crates, the way QNX splits it between
 The library lives in a repository of its own, so that other boards can
 use it, with its tests and its own book, which describes the library
 without board code (it uses boards only as examples). This book covers
-the rest, and refers to the library's book for the library; `make book`
-builds the two side by side (Chapter 2).
+the rest, and links to the library's book, which the library's repository
+publishes, for the library.
 
 ## What comes from QNX
 

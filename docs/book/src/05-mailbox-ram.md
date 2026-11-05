@@ -112,5 +112,5 @@ With the revision's RAM size and the GPU's share from the mailbox,
 *Figure 5.3: What `init_ram()` describes on each size of board.*
 
 The library then turns what is free into `sysram` (the library's book,
-[Chapter 5](../startup/05-ram.html)). On QEMU's 2 GB board the kernel
+[Chapter 5](https://capitan-davide.github.io/oscraft-startup/05-ram.html)). On QEMU's 2 GB board the kernel
 reports 1952 MB free of 2048, the same as with QNX's startup.

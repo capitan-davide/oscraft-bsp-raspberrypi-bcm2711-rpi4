@@ -9,7 +9,7 @@ handed to the kernel as callouts.
 
 Startup and the kernel print on one of three UARTs, which the board lists
 for the library (Listing 6.1); `-D` chooses one, by name (the library's
-book, [Chapter 4](../startup/04-startup-context.html)).
+book, [Chapter 4](https://capitan-davide.github.io/oscraft-startup/04-startup-context.html)).
 
 *Listing 6.1: The debug UARTs (`startup-bcm2711-rpi4/src/board.rs`).*
 

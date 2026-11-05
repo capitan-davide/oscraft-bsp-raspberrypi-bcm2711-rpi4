@@ -2,7 +2,7 @@
 
 The system page's `hwinfo` section tells drivers about the board's
 devices, so that they can start without board-specific options (the
-library's book, [Chapter 6](../startup/06-system-page.html)). This
+library's book, [Chapter 6](https://capitan-davide.github.io/oscraft-startup/06-system-page.html)). This
 chapter shows what the board crate puts there: the same devices as QNX's
 own BSP.
 

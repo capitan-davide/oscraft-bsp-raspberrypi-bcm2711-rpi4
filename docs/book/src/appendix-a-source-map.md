@@ -21,4 +21,4 @@ explains it. The library's files are in its own book's source map.
 | `tools/qemu/run.sh` | Booting an image in QEMU | 2 |
 | `tools/qemu/test.py` | The QEMU boot test | 2 |
 | `tools/rpi4/fetch-firmware.sh` | Fetching the device tree | 3 |
-| `Makefile` | Building, running, testing, the books | 2 |
+| `Makefile` | Building, running, testing, the book | 2 |
