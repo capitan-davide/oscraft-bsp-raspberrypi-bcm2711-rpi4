@@ -31,8 +31,12 @@ console pins, GPIO 14 and 15, go to the mini-UART; UART0 serves the
 Bluetooth chip. `config.txt` changes this: `dtoverlay=disable-bt` gives
 the pins to UART0. Which pins a UART uses is set in the GPIO block's
 function registers, which the firmware sets up from `config.txt`;
-startup leaves them alone. In QEMU, UART0 is the first serial port and
+startup leaves them alone. Figure 6.1 shows the choices. In QEMU, UART0 is the first serial port and
 the mini-UART the second (`SERIAL0`, `SERIAL1` in `tools/qemu/run.sh`).
+
+![Which pins reach which UART](images/ch06-uarts.svg)
+
+*Figure 6.1: Which pins reach which UART, by `config.txt`.*
 
 The PL011s use the library's driver; startup sets their baud rate from
 their 48 MHz clock. The mini-UART is the board's own
@@ -77,7 +81,13 @@ with a password, 0x5a, in the top byte.
 With `-W`, startup starts the watchdog (Listing 6.3), and something in the
 running system must reload it in time: QNX's `wdtkick` utility does, given
 the PM's registers and values. QNX's BSP starts it in the boot script when
-startup has `-W`.
+startup has `-W`. Figure 6.2 shows the idea: as long as the system is
+healthy the counter never gets to 0, and if the system hangs, nothing
+reloads it and the board resets.
+
+![The watchdog's counter over time](images/ch06-watchdog.svg)
+
+*Figure 6.2: The watchdog: reloaded while the system runs, a reset when it stops; the reboot callout gives it 10 ticks.*
 
 *Listing 6.3: Starting the watchdog, `watchdog_enable()` (`startup-bcm2711-rpi4/src/pm.rs`).*
 

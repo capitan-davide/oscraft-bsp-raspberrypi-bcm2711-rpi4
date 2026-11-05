@@ -76,9 +76,9 @@ fn release_cpu(cpu: usize, entry: u64) {
 // ANCHOR: init_ram
 /// Describe the RAM: its size from the board revision, less the part the
 /// VideoCore keeps (`vcram`, below 1 GB). The peripherals sit at
-/// 0xfc000000, so a board with 4 GB or more has its RAM in two parts, below
-/// them and from 4 GB up. `below1G` names the RAM that the BCM2711's older
-/// DMA engines and the SD card controller can reach.
+/// 0xfc000000, so a 4 GB board's RAM stops there, and an 8 GB board has the
+/// rest from 4 GB up. `below1G` names the RAM that the BCM2711's older DMA
+/// engines and the SD card controller can reach.
 fn init_ram(s: &mut Startup, rev: u32) {
     let ram = match revision::memory_mb(rev) * MB {
         0 => {

@@ -21,8 +21,9 @@ peripheral" mode, which the firmware selects).
 | `0x0_ff80_0000` - `0x0_ffff_ffff` | The ARM's local peripherals, including the GIC-400 |
 | `0x1_0000_0000` and up | RAM above 4 GB, on 8 GB boards |
 
-The peripherals sit in the top 64 MB below 4 GB, so a board with 4 GB or
-more has RAM in two parts, around them.
+The peripherals sit in the top 64 MB below 4 GB, so the RAM cannot simply
+continue past them. Figure 5.3, below, shows what that does to each size of
+board.
 
 ## The mailbox
 
@@ -32,7 +33,12 @@ The mailbox is a pair of hardware FIFOs between the ARM and the GPU, at
 request with room for the answer. The ARM writes the buffer's address,
 with the channel number in its low 4 bits (so the buffer must be 16-byte
 aligned), into mailbox 1; the firmware answers in the same buffer and
-posts the address back in mailbox 0.
+posts the address back in mailbox 0. Figure 5.1 follows one call, with
+the message before and after.
+
+![A mailbox call, and its message](images/ch05-mailbox.svg)
+
+*Figure 5.1: A mailbox call: the address travels through the registers, the data stays in RAM.*
 
 *Listing 5.1: A mailbox call (`startup-bcm2711-rpi4/src/mbox.rs`).*
 
@@ -73,7 +79,11 @@ The revision code describes the board in bit fields:
 `NOQuuuWuFMMMCCCCPPPPTTTTTTTTRRRR`, where `MMM` is the RAM size (from 256 MB
 to 8 GB), `CCCC` the maker, `PPPP` the processor and `TTTTTTTT` the board
 type (0x11 for a Pi 4 B). `revision.rs` decodes it, with unit tests; QEMU's
-2 GB `raspi4b` reports `0xb03115`.
+2 GB `raspi4b` reports `0xb03115`, which Figure 5.2 takes apart.
+
+![The board revision code's fields](images/ch05-revision.svg)
+
+*Figure 5.2: The fields of the revision code, for QEMU's board.*
 
 ## The RAM
 
@@ -86,8 +96,9 @@ With the revision's RAM size and the GPU's share from the mailbox,
 {{#include ../../../startup-bcm2711-rpi4/src/board.rs:init_ram}}
 ```
 
-- The RAM is one range, or two around the peripherals on 4 and 8 GB
-  boards.
+- The RAM is one range, or two on an 8 GB board, one on each side of the
+  peripherals. A 4 GB board has one range, which stops at the peripherals:
+  its last 64 MB goes unused.
 - The first page holds armstub8 and the spin table, which the other
   cores read until startup releases them (Chapter 3): it is reserved.
 - The GPU's RAM is reserved too, and named `vcram`.
@@ -95,6 +106,10 @@ With the revision's RAM size and the GPU's share from the mailbox,
   engines, and the SD card controller's, only reach the first gigabyte;
   drivers ask for memory there by this name (QNX's SD card driver takes
   `mem name=below1G`).
+
+![The RAM of 2, 4 and 8 GB boards](images/ch05-ram.svg)
+
+*Figure 5.3: What `init_ram()` describes on each size of board.*
 
 The library then turns what is free into `sysram` (the library's book,
 [Chapter 5](../startup/05-ram.html)). On QEMU's 2 GB board the kernel

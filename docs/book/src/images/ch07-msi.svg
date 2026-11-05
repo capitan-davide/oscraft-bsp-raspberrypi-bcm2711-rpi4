@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="510" viewBox="0 0 820 510" font-family="DejaVu Sans, Helvetica, Arial, sans-serif" font-size="12">
+  <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#333333"/></marker><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b03a2e"/></marker></defs>
+  <style>
+    .k { fill: #dce9f8; stroke: #2c5d9b; stroke-width: 1.2; }
+    .y { fill: #fbf3c8; stroke: #9a8420; stroke-width: 1.2; }
+    .u { fill: #f6e7d2; stroke: #9a6b2f; stroke-width: 1.2; }
+    .g { fill: #e2f0dc; stroke: #3e7b34; stroke-width: 1.2; }
+    .n { fill: #eeeeee; stroke: #666666; stroke-width: 1.2; }
+    .w { fill: #ffffff; stroke: #666666; stroke-width: 1; }
+    .d { fill: #ffffff; stroke: #666666; stroke-width: 1; stroke-dasharray: 4 3; }
+    .ln { fill: none; stroke: #333333; stroke-width: 1.3; }
+    .dl { fill: none; stroke: #666666; stroke-width: 1; stroke-dasharray: 4 3; }
+    .lnr { fill: none; stroke: #b03a2e; stroke-width: 1.6; }
+    .t { text-anchor: middle; }
+    .e { text-anchor: end; }
+    .b { font-weight: bold; }
+    .s { font-size: 11px; fill: #444444; }
+    .m { font-family: DejaVu Sans Mono, monospace; font-size: 11px; }
+    .r { fill: #b03a2e; font-weight: bold; }
+  </style>
+  <rect width="820" height="510" fill="#ffffff"/>
+  <text class="b" x="20" y="24">How an MSI reaches its handler: the VL805 raising MSI 3</text>
+  <rect class="u" x="20" y="44" width="170" height="76" rx="4"/>
+  <text class="t b" x="105" y="70">VL805</text>
+  <text class="t s" x="105" y="88">a PCI Express device,</text>
+  <text class="t s" x="105" y="102">with no interrupt line</text>
+  <rect class="k" x="260" y="36" width="300" height="120" rx="4"/>
+  <text class="t b" x="410" y="58">PCIe controller, the MSI part</text>
+  <rect class="w" x="290" y="92" width="24" height="26"/>
+  <text class="t m" x="302" y="110">7</text>
+  <rect class="w" x="314" y="92" width="24" height="26"/>
+  <text class="t m" x="326" y="110">6</text>
+  <rect class="w" x="338" y="92" width="24" height="26"/>
+  <text class="t m" x="350" y="110">5</text>
+  <rect class="w" x="362" y="92" width="24" height="26"/>
+  <text class="t m" x="374" y="110">4</text>
+  <rect class="g" x="386" y="92" width="24" height="26"/>
+  <text class="t m" x="398" y="110">3</text>
+  <rect class="w" x="410" y="92" width="24" height="26"/>
+  <text class="t m" x="422" y="110">2</text>
+  <rect class="w" x="434" y="92" width="24" height="26"/>
+  <text class="t m" x="446" y="110">1</text>
+  <rect class="w" x="458" y="92" width="24" height="26"/>
+  <text class="t m" x="470" y="110">0</text>
+  <text class="s" x="290" y="84">status bits, of 32 (shown: the low 8)</text>
+  <text class="s" x="290" y="138">any bit set: raises its one GIC input</text>
+  <rect class="y" x="640" y="44" width="160" height="76" rx="4"/>
+  <text class="t b" x="720" y="70">GIC-400</text>
+  <text class="t m" x="720" y="90">interrupt ID 180</text>
+  <text class="t s" x="720" y="106">SPI 148</text>
+  <path class="ln" d="M190,82 L258,82" marker-end="url(#a)"/>
+  <text class="t s" x="224" y="72">a write</text>
+  <text class="t s" x="224" y="98">on the bus</text>
+  <path class="ln" d="M560,82 L638,82" marker-end="url(#a)"/>
+  <text class="t s" x="599" y="74">one line</text>
+  <text class="b" x="20" y="190">What the kernel then does</text>
+  <rect class="w" x="20" y="204" width="146" height="84" rx="4"/>
+  <text class="b" x="28" y="226">1. GIC's id</text>
+  <text class="s" x="28" y="246">answers 180</text>
+  <path class="ln" d="M166,246 L176,246" marker-end="url(#a)"/>
+  <rect class="w" x="178" y="204" width="146" height="84" rx="4"/>
+  <text class="b" x="186" y="226">2. Cascade</text>
+  <text class="s" x="186" y="246">180 leads to the</text>
+  <text class="s" x="186" y="260">MSI entry</text>
+  <path class="ln" d="M324,246 L334,246" marker-end="url(#a)"/>
+  <rect class="w" x="336" y="204" width="146" height="84" rx="4"/>
+  <text class="b" x="344" y="226">3. MSI id</text>
+  <text class="s" x="344" y="246">lowest pending: 3;</text>
+  <text class="s" x="344" y="260">masks it, clears</text>
+  <text class="s" x="344" y="274">its status bit</text>
+  <path class="ln" d="M482,246 L492,246" marker-end="url(#a)"/>
+  <rect class="w" x="494" y="204" width="146" height="84" rx="4"/>
+  <text class="b" x="502" y="226">4. Handler</text>
+  <text class="s" x="502" y="246">of vector</text>
+  <text class="s" x="502" y="260">0x200 + 3 = 0x203</text>
+  <path class="ln" d="M640,246 L650,246" marker-end="url(#a)"/>
+  <rect class="w" x="652" y="204" width="146" height="84" rx="4"/>
+  <text class="b" x="660" y="226">5. eoi</text>
+  <text class="s" x="660" y="246">each controller's;</text>
+  <text class="s" x="660" y="260">the MSI one</text>
+  <text class="s" x="660" y="274">unmasks 3</text>
+  <text class="b" x="20" y="322">The three intrinfo entries, as vectors</text>
+  <rect class="k" x="20" y="336" width="220" height="60"/>
+  <text class="t b" x="130" y="358">GIC: SGIs, PPIs</text>
+  <text class="t m" x="130" y="378">vectors 0-31</text>
+  <rect class="y" x="240" y="336" width="350" height="60"/>
+  <text class="t b" x="370" y="358">GIC: SPIs, the SoC's devices</text>
+  <text class="t m" x="370" y="378">vectors 32-223</text>
+  <rect class="g" x="620" y="336" width="180" height="60"/>
+  <text class="t b" x="710" y="358">MSI controller</text>
+  <text class="t m" x="710" y="378">vectors 0x200-0x21f</text>
+  <text class="t s" x="605" y="370">...</text>
+  <rect class="u" x="512" y="336" width="14" height="60"/>
+  <path class="lnr" d="M710,396 L710,436 L519,436 L519,398" marker-end="url(#ar)"/>
+  <text class="t m" x="615" y="452">cascade_vector = 180</text>
+  <text class="t s" x="130" y="416">each core has its own copy,</text>
+  <text class="t s" x="130" y="430">0x8000 apart</text>
+  <text class="s" x="20" y="480">The orange mark is vector 180, the one input the MSI entry cascades into. flags = INTR_FLAG_MSI tells the PCI server these vectors are</text>
+  <text class="s" x="20" y="496">for MSIs, and the server hands them to drivers. MSI 3 is only an example.</text>
+</svg>

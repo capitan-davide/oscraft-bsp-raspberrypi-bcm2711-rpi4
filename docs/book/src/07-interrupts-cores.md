@@ -37,7 +37,13 @@ To the kernel, the controller is a second interrupt controller,
 MSI controller's `id` callout which MSI it is, and handles that one. The
 board describes it as a third `intrinfo` entry (Listing 7.1): 32 vectors
 from 0x200, `cascade_vector` 180, and the `INTR_FLAG_MSI` flag, which tells
-the PCI server these vectors are for MSIs.
+the PCI server these vectors are for MSIs. Figure 7.1 follows one MSI from
+the device to its handler, and shows where the three entries sit among
+the vectors.
+
+![An MSI's path, and the intrinfo entries](images/ch07-msi.svg)
+
+*Figure 7.1: An MSI, from the device's write to its handler, and the vectors of the three `intrinfo` entries.*
 
 *Listing 7.1: The MSI controller, `init_msi()` (`startup-bcm2711-rpi4/src/msi.rs`).*
 
@@ -72,7 +78,12 @@ boards.
 
 The four Cortex-A72 cores wait on the firmware's spin table (Chapter 3).
 The library calls the board's `release_cpu()` (Listing 7.3) for each in
-turn, with the physical address of its entry code.
+turn, with the physical address of its entry code. Figure 7.2 shows the
+moment core 2 is released.
+
+![Releasing a core through the spin table](images/ch07-release.svg)
+
+*Figure 7.2: Releasing core 2: its word in the spin table, then `sev` for every waiting core.*
 
 *Listing 7.3: Releasing a core (`startup-bcm2711-rpi4/src/board.rs`).*
 

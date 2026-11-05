@@ -25,7 +25,12 @@ address space: its bus maps bus addresses `0xc0000000` and up to physical
 addresses 0 and up, for 1 GB. The device tree says so in the `dma-ranges`
 property of the controller's parent bus, and the board crate reads it
 there with the library's device tree reader; without a device tree, the
-device is left out.
+device is left out. Figure 8.1 shows the window, which is also why the
+driver takes its memory from `below1G` (Chapter 5).
+
+![The SD card controller's DMA window](images/ch08-dma-window.svg)
+
+*Figure 8.1: The SD card controller's DMA window: bus addresses from `0xc0000000` are the first gigabyte of RAM.*
 
 *Listing 8.1: The devices, `init_hwinfo()` (`startup-bcm2711-rpi4/src/hwinfo.rs`).*
 

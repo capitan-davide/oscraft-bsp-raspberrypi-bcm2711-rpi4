@@ -28,7 +28,13 @@ hardware are only built for AArch64, so that the rest
 Listing 4.1 is the whole of the board's `main()`. It follows the order the
 library requires (the library's book,
 [Chapter 14](../startup/14-board-crate.html)), with the board's facts at
-each step.
+each step. Figure 4.1 gives the idea first: `main()` gathers what the
+board knows from four places, and the library turns it into the system
+page, where the kernel and the drivers read it.
+
+![What main() gathers, and what it hands on](images/ch04-main.svg)
+
+*Figure 4.1: Where the board's facts come from, and where they end up.*
 
 *Listing 4.1: The board's `main()` (`startup-bcm2711-rpi4/src/board.rs`).*
 
@@ -49,7 +55,8 @@ In order:
 6. **The page tables**, by the library.
 7. **The GIC-400** at its addresses, the **MSI controller** cascaded into
    it, and the **timer**'s PPI (Chapter 7).
-8. **The boot CPU**, at the ARM clock's speed.
+8. **The boot CPU**, at the ARM clock's speed. This also runs the GIC's
+   part of the core's setup, which `gic_v2::init()` registered.
 9. **Reboot**: the watchdog's callout (Chapter 6). The kernel's debug
    channel needs nothing here: the library gives the kernel the debug UART
    startup uses.

@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="436" viewBox="0 0 820 436" font-family="DejaVu Sans, Helvetica, Arial, sans-serif" font-size="12">
+  <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#333333"/></marker><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b03a2e"/></marker></defs>
+  <style>
+    .k { fill: #dce9f8; stroke: #2c5d9b; stroke-width: 1.2; }
+    .y { fill: #fbf3c8; stroke: #9a8420; stroke-width: 1.2; }
+    .u { fill: #f6e7d2; stroke: #9a6b2f; stroke-width: 1.2; }
+    .g { fill: #e2f0dc; stroke: #3e7b34; stroke-width: 1.2; }
+    .n { fill: #eeeeee; stroke: #666666; stroke-width: 1.2; }
+    .w { fill: #ffffff; stroke: #666666; stroke-width: 1; }
+    .d { fill: #ffffff; stroke: #666666; stroke-width: 1; stroke-dasharray: 4 3; }
+    .ln { fill: none; stroke: #333333; stroke-width: 1.3; }
+    .dl { fill: none; stroke: #666666; stroke-width: 1; stroke-dasharray: 4 3; }
+    .lnr { fill: none; stroke: #b03a2e; stroke-width: 1.6; }
+    .t { text-anchor: middle; }
+    .e { text-anchor: end; }
+    .b { font-weight: bold; }
+    .s { font-size: 11px; fill: #444444; }
+    .m { font-family: DejaVu Sans Mono, monospace; font-size: 11px; }
+    .r { fill: #b03a2e; font-weight: bold; }
+  </style>
+  <rect width="820" height="436" fill="#ffffff"/>
+  <text class="t b" x="110" y="24">ARM core</text>
+  <text class="t b" x="410" y="24">Mailbox registers</text>
+  <text class="t b" x="710" y="24">VideoCore firmware</text>
+  <rect class="u" x="30" y="36" width="160" height="186" rx="4"/>
+  <rect class="n" x="620" y="36" width="180" height="186" rx="4"/>
+  <rect class="y" x="320" y="60" width="180" height="56"/>
+  <text class="t b" x="410" y="82">mailbox 1</text>
+  <text class="t m" x="410" y="102">write 0xfe00b8a0</text>
+  <rect class="k" x="320" y="140" width="180" height="56"/>
+  <text class="t b" x="410" y="162">mailbox 0</text>
+  <text class="t m" x="410" y="182">read 0xfe00b880</text>
+  <path class="ln" d="M190,88 L318,88" marker-end="url(#a)"/>
+  <text class="t m" x="255" y="80">addr | 8</text>
+  <path class="ln" d="M500,88 L618,88" marker-end="url(#a)"/>
+  <text class="t s" x="560" y="80">reads it</text>
+  <path class="ln" d="M618,168 L502,168" marker-end="url(#a)"/>
+  <text class="t s" x="560" y="160">posts it back</text>
+  <path class="ln" d="M318,168 L192,168" marker-end="url(#a)"/>
+  <text class="t m" x="255" y="160">addr | 8</text>
+  <text class="t s" x="110" y="84">1. writes the</text>
+  <text class="t s" x="110" y="98">message's address</text>
+  <text class="t s" x="110" y="158">3. polls until the</text>
+  <text class="t s" x="110" y="172">answer arrives</text>
+  <text class="t s" x="710" y="110">2. reads the tag, and</text>
+  <text class="t s" x="710" y="124">answers in the same buffer</text>
+  <text class="s" x="320" y="216">The low 4 bits carry the channel:</text>
+  <text class="s" x="320" y="230">8, the property channel.</text>
+  <text class="b" x="30" y="262">The message, in RAM below 1 GB: eight 32-bit words, 16-byte aligned. Here, asking for the GPU's RAM (VC memory)</text>
+  <text class="b" x="30" y="312">Sent</text>
+  <text class="b" x="30" y="364">Answered</text>
+  <text class="t s" x="172.0" y="284">size</text>
+  <rect class="w" x="130" y="292" width="84" height="32"/>
+  <text class="t m" x="172.0" y="312">32</text>
+  <rect class="w" x="130" y="344" width="84" height="32"/>
+  <text class="t m" x="172.0" y="364">32</text>
+  <text class="t s" x="256.0" y="284">request</text>
+  <rect class="w" x="214" y="292" width="84" height="32"/>
+  <text class="t m" x="256.0" y="312">0</text>
+  <rect class="g" x="214" y="344" width="84" height="32"/>
+  <text class="t m" x="256.0" y="364">bit 31 set</text>
+  <text class="t s" x="340.0" y="284">tag</text>
+  <rect class="w" x="298" y="292" width="84" height="32"/>
+  <text class="t m" x="340.0" y="312">0x10006</text>
+  <rect class="w" x="298" y="344" width="84" height="32"/>
+  <text class="t m" x="340.0" y="364">0x10006</text>
+  <text class="t s" x="424.0" y="284">value size</text>
+  <rect class="w" x="382" y="292" width="84" height="32"/>
+  <text class="t m" x="424.0" y="312">8</text>
+  <rect class="w" x="382" y="344" width="84" height="32"/>
+  <text class="t m" x="424.0" y="364">8</text>
+  <text class="t s" x="508.0" y="284">tag code</text>
+  <rect class="w" x="466" y="292" width="84" height="32"/>
+  <text class="t m" x="508.0" y="312">0</text>
+  <rect class="g" x="466" y="344" width="84" height="32"/>
+  <text class="t m" x="508.0" y="364">reply</text>
+  <text class="t s" x="592.0" y="284">value 0</text>
+  <rect class="w" x="550" y="292" width="84" height="32"/>
+  <text class="t m" x="592.0" y="312">0</text>
+  <rect class="g" x="550" y="344" width="84" height="32"/>
+  <text class="t m" x="592.0" y="364">base</text>
+  <text class="t s" x="676.0" y="284">value 1</text>
+  <rect class="w" x="634" y="292" width="84" height="32"/>
+  <text class="t m" x="676.0" y="312">0</text>
+  <rect class="g" x="634" y="344" width="84" height="32"/>
+  <text class="t m" x="676.0" y="364">size</text>
+  <text class="t s" x="760.0" y="284">end tag</text>
+  <rect class="w" x="718" y="292" width="84" height="32"/>
+  <text class="t m" x="760.0" y="312">0</text>
+  <rect class="w" x="718" y="344" width="84" height="32"/>
+  <text class="t m" x="760.0" y="364">0</text>
+  <text class="s" x="30" y="404">The firmware rewrites the green words. Bit 31 of the request code says it handled the message:</text>
+  <text class="s" x="30" y="420">call() then returns the two value words; otherwise it returns zeros.</text>
+</svg>

@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="270" viewBox="0 0 820 270" font-family="DejaVu Sans, Helvetica, Arial, sans-serif" font-size="12">
+  <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#333333"/></marker><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b03a2e"/></marker></defs>
+  <style>
+    .k { fill: #dce9f8; stroke: #2c5d9b; stroke-width: 1.2; }
+    .y { fill: #fbf3c8; stroke: #9a8420; stroke-width: 1.2; }
+    .u { fill: #f6e7d2; stroke: #9a6b2f; stroke-width: 1.2; }
+    .g { fill: #e2f0dc; stroke: #3e7b34; stroke-width: 1.2; }
+    .n { fill: #eeeeee; stroke: #666666; stroke-width: 1.2; }
+    .w { fill: #ffffff; stroke: #666666; stroke-width: 1; }
+    .d { fill: #ffffff; stroke: #666666; stroke-width: 1; stroke-dasharray: 4 3; }
+    .ln { fill: none; stroke: #333333; stroke-width: 1.3; }
+    .dl { fill: none; stroke: #666666; stroke-width: 1; stroke-dasharray: 4 3; }
+    .lnr { fill: none; stroke: #b03a2e; stroke-width: 1.6; }
+    .t { text-anchor: middle; }
+    .e { text-anchor: end; }
+    .b { font-weight: bold; }
+    .s { font-size: 11px; fill: #444444; }
+    .m { font-family: DejaVu Sans Mono, monospace; font-size: 11px; }
+    .r { fill: #b03a2e; font-weight: bold; }
+  </style>
+  <rect width="820" height="270" fill="#ffffff"/>
+  <text class="b" x="20" y="24">The watchdog's counter</text>
+  <path class="ln" d="M70,200 L790,200" marker-end="url(#a)"/>
+  <path class="ln" d="M70,200 L70,42" marker-end="url(#a)"/>
+  <text class="t s" x="44" y="60">ticks</text>
+  <text class="s" x="760" y="216">time</text>
+  <path class="lnr" d="M70,56 L190,120 L190,56 L310,120 L310,56 L430,120 L430,56 L610,200"/>
+  <text class="t s" x="70" y="216">-W: WDOG</text>
+  <text class="t s" x="190" y="216">wdtkick reloads</text>
+  <text class="t s" x="310" y="216">wdtkick reloads</text>
+  <text class="t s" x="430" y="216">wdtkick reloads</text>
+  <path class="ln" d="M610,154 L610,196" marker-end="url(#a)"/>
+  <text class="t b" x="610" y="148">reset</text>
+  <text class="s" x="528" y="104">nothing reloads it</text>
+  <path class="lnr" d="M690,188 L702,200"/>
+  <text class="t s" x="696" y="160">the reboot callout:</text>
+  <text class="t s" x="696" y="174">10 ticks, then reset</text>
+  <text class="s" x="20" y="244">Every write carries the password 0x5a in its top byte. PM_RSTC, set before the counter expires, says what to reset: here, the whole board.</text>
+</svg>

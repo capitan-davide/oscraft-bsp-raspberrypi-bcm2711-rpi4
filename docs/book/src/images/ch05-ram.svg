@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="620" viewBox="0 0 820 620" font-family="DejaVu Sans, Helvetica, Arial, sans-serif" font-size="12">
+  <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#333333"/></marker><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b03a2e"/></marker></defs>
+  <style>
+    .k { fill: #dce9f8; stroke: #2c5d9b; stroke-width: 1.2; }
+    .y { fill: #fbf3c8; stroke: #9a8420; stroke-width: 1.2; }
+    .u { fill: #f6e7d2; stroke: #9a6b2f; stroke-width: 1.2; }
+    .g { fill: #e2f0dc; stroke: #3e7b34; stroke-width: 1.2; }
+    .n { fill: #eeeeee; stroke: #666666; stroke-width: 1.2; }
+    .w { fill: #ffffff; stroke: #666666; stroke-width: 1; }
+    .d { fill: #ffffff; stroke: #666666; stroke-width: 1; stroke-dasharray: 4 3; }
+    .ln { fill: none; stroke: #333333; stroke-width: 1.3; }
+    .dl { fill: none; stroke: #666666; stroke-width: 1; stroke-dasharray: 4 3; }
+    .lnr { fill: none; stroke: #b03a2e; stroke-width: 1.6; }
+    .t { text-anchor: middle; }
+    .e { text-anchor: end; }
+    .b { font-weight: bold; }
+    .s { font-size: 11px; fill: #444444; }
+    .m { font-family: DejaVu Sans Mono, monospace; font-size: 11px; }
+    .r { fill: #b03a2e; font-weight: bold; }
+  </style>
+  <rect width="820" height="620" fill="#ffffff"/>
+  <text class="s" x="20" y="24">Not to scale.</text>
+  <text class="t b" x="205.0" y="24">2 GB board</text>
+  <text class="t b" x="425.0" y="24">4 GB board</text>
+  <text class="t b" x="645.0" y="24">8 GB board</text>
+  <text class="m" x="20" y="46">8 GB</text>
+  <text class="m" x="20" y="136">4 GB</text>
+  <text class="m" x="20" y="206">0xfc000000</text>
+  <text class="m" x="20" y="340">1 GB</text>
+  <text class="m" x="20" y="384">vc_base</text>
+  <text class="m" x="20" y="504">0x1000</text>
+  <text class="m" x="20" y="546">0</text>
+  <rect class="d" x="120" y="40" width="170" height="90"/>
+  <text class="t s" x="205.0" y="90">nothing</text>
+  <rect class="n" x="120" y="130" width="170" height="70"/>
+  <text class="t b" x="205.0" y="160">peripherals</text>
+  <text class="t s" x="205.0" y="178">64 MB, never RAM</text>
+  <rect class="d" x="120" y="200" width="170" height="90"/>
+  <text class="t s" x="205.0" y="250">nothing above 2 GB</text>
+  <rect class="k" x="120" y="290" width="170" height="44"/>
+  <text class="t b" x="205.0" y="316">RAM</text>
+  <rect class="u" x="120" y="334" width="170" height="44"/>
+  <text class="t b" x="205.0" y="352">vcram</text>
+  <text class="t s" x="205.0" y="368">the GPU's: reserved</text>
+  <rect class="k" x="120" y="378" width="170" height="120"/>
+  <text class="t b" x="205.0" y="444">RAM</text>
+  <rect class="n" x="120" y="498" width="170" height="44"/>
+  <text class="t b" x="205.0" y="516">firmware page</text>
+  <text class="t s" x="205.0" y="532">armstub8, spin table</text>
+  <path class="ln" d="M294,378 L298,378 L298,542 L294,542"/>
+  <text class="t s" transform="translate(311,460) rotate(-90)">below1G</text>
+  <rect class="d" x="340" y="40" width="170" height="90"/>
+  <text class="t s" x="425.0" y="90">nothing</text>
+  <rect class="n" x="340" y="130" width="170" height="70"/>
+  <text class="t b" x="425.0" y="160">peripherals</text>
+  <text class="t s" x="425.0" y="178">64 MB, never RAM</text>
+  <rect class="k" x="340" y="200" width="170" height="134"/>
+  <text class="t b" x="425.0" y="272">RAM</text>
+  <rect class="u" x="340" y="334" width="170" height="44"/>
+  <text class="t b" x="425.0" y="352">vcram</text>
+  <text class="t s" x="425.0" y="368">the GPU's: reserved</text>
+  <rect class="k" x="340" y="378" width="170" height="120"/>
+  <text class="t b" x="425.0" y="444">RAM</text>
+  <rect class="n" x="340" y="498" width="170" height="44"/>
+  <text class="t b" x="425.0" y="516">firmware page</text>
+  <text class="t s" x="425.0" y="532">armstub8, spin table</text>
+  <path class="ln" d="M514,378 L518,378 L518,542 L514,542"/>
+  <text class="t s" transform="translate(531,460) rotate(-90)">below1G</text>
+  <rect class="k" x="560" y="40" width="170" height="90"/>
+  <text class="t b" x="645.0" y="80">RAM</text>
+  <text class="t m" x="645.0" y="100">add_ram(4 GB, 4 GB)</text>
+  <rect class="n" x="560" y="130" width="170" height="70"/>
+  <text class="t b" x="645.0" y="160">peripherals</text>
+  <text class="t s" x="645.0" y="178">64 MB, never RAM</text>
+  <rect class="k" x="560" y="200" width="170" height="134"/>
+  <text class="t b" x="645.0" y="272">RAM</text>
+  <rect class="u" x="560" y="334" width="170" height="44"/>
+  <text class="t b" x="645.0" y="352">vcram</text>
+  <text class="t s" x="645.0" y="368">the GPU's: reserved</text>
+  <rect class="k" x="560" y="378" width="170" height="120"/>
+  <text class="t b" x="645.0" y="444">RAM</text>
+  <rect class="n" x="560" y="498" width="170" height="44"/>
+  <text class="t b" x="645.0" y="516">firmware page</text>
+  <text class="t s" x="645.0" y="532">armstub8, spin table</text>
+  <path class="ln" d="M734,378 L738,378 L738,542 L734,542"/>
+  <text class="t s" transform="translate(751,460) rotate(-90)">below1G</text>
+  <text class="t m" x="205.0" y="562">add_ram(0, 2 GB)</text>
+  <text class="t m" x="425.0" y="562">add_ram(0, 4 GB - 64 MB)</text>
+  <text class="t m" x="645.0" y="562">add_ram(0, 4 GB - 64 MB)</text>
+  <text class="s" x="20" y="590">below1G is the RAM under the GPU's, which the older DMA engines reach; it is named on boards with more than 1 GB.</text>
+  <text class="s" x="20" y="606">A 4 GB board stops at the peripherals, so its last 64 MB of RAM goes unused. Only an 8 GB board has a second range.</text>
+</svg>
