@@ -1,0 +1,3 @@
+# OsCraft's repository is private: fetch it with git's own client (its SSH keys).
+[net]
+git-fetch-with-cli = true

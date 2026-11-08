@@ -12,4 +12,5 @@ license.workspace = true
 crate-type = ["staticlib"]
 
 [dependencies]
-oscraft-startup = { git = "https://github.com/capitan-davide/oscraft-startup" }
+# OsCraft's startup library (startup/ in OsCraft's repository), pinned.
+oscraft-startup = { git = "ssh://git@github.com/capitan-davide/oscraft.git", rev = "4db85f5649a207a4940d62ea6fdfce1322f4cdd8" }

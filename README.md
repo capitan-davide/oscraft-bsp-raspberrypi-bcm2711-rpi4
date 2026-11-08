@@ -41,3 +41,21 @@ the BSP's locally, into `build/book/`.
 Tested in QEMU, where the system page matches QNX's own startup's (the
 book's "Matching QNX's Startup" chapter lists the small differences).
 Not yet run on the board.
+
+## For OsCraft
+
+OsCraft's build takes this board from a checkout of this repository
+(`make TARGET=rpi4 OSCRAFT_BSP=<dir>` in OsCraft's tree), which has the
+shape every board out of OsCraft's tree has:
+
+- `oscraft/board.build`: the board's part of OsCraft's image (the image's
+  address, the startup, the board's modules), before OsCraft's
+  `images/base.build`;
+- `oscraft/qnx-board.build`: the board's part of the QNX personality's
+  overlay (the console's driver and the session);
+- `pcid/*.c`: the board's code in OsCraft's pcid module, built with
+  FreeBSD's drivers for the board's PCIe bridge and mailbox
+  (`bcm2711_pci.ko`).
+
+The startup library is OsCraft's (`startup/` in its repository), a git
+dependency pinned in `startup-bcm2711-rpi4/Cargo.toml`.
