@@ -8,3 +8,5 @@
 
 # Local tool configuration (MCP servers with machine-specific paths)
 /.mcp.json
+# mkifs -o .: the image files with symbols, from a test
+/*.sym

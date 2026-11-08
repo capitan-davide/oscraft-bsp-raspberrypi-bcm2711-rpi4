@@ -1,0 +1,24 @@
+###############################################################################
+# The Raspberry Pi 4 (TARGET=rpi4; QEMU's raspi4b too): the image at 0x80000,
+# where the firmware (or tools/qemu/fwstub) enters it, and QNX 8.0's prebuilt
+# RPi4 startup from the BSP ($QNX_BSP/prebuilt), which builds the system
+# page, until the Rust startup (oscraft-bsp-raspberrypi-bcm2711-rpi4) is wired
+# in. images/base.build follows.
+###############################################################################
+
+[image=0x80000]
+# -W: startup enables the board's watchdog (15 s, the most it allows: the
+# kernel's self-tests, when asked for with OSCRAFT_SELFTEST=1, run before
+# the boot script starts wdtkick, whose kicks then reload the BSP image's
+# 2.5 s); a hung system resets itself.
+[virtual=aarch64le,raw] .boot = {
+    startup-bcm2711-rpi4 -v -D miniuart -W 15000 -u reg
+    PATH=/proc/boot:/bin:/sbin:/usr/bin:/usr/sbin
+    # What getty sets on FreeBSD: programs size the console by it.
+    TERM=xterm
+    ${OSCRAFT_KERNEL} -v
+}
+
+
+# pcid's, from the board's BSP: the host bridge, the mailbox, the VL805.
+/boot/modules/bcm2711_pci.ko=${OSCRAFT_FREEBSD_DIR}/mods/bcm2711_pci.ko

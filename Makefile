@@ -10,7 +10,13 @@ CLANG ?= clang
 LLD   ?= ld.lld
 
 QEMU_DIR := $(BUILD)/qemu
+# QNX's RPi4 BSP, unpacked: QNX_BSP if it names one (as OsCraft's build
+# does), else unpacked here from the zip.
+ifneq ($(QNX_BSP),)
+BSP_DIR  := $(QNX_BSP)
+else
 BSP_DIR  := $(BUILD)/bsp
+endif
 
 # The Rust startup: cargo profile "release" (default) or "dev".
 TARGET      := aarch64-unknown-none-softfloat
@@ -21,12 +27,13 @@ STARTUP_DIR := $(BUILD)/startup
 STARTUP     := $(STARTUP_DIR)/startup-bcm2711-rpi4
 IMAGE       := $(BUILD)/rpi4.ifs
 
-# The startup library, oscraft-startup, is a git dependency of the board
-# crate. OSCRAFT_STARTUP=<dir> uses a local checkout of it instead, for
-# working on both at once. (Cargo then records it in Cargo.lock: build
+# The startup library is a git dependency of the board crate: OsCraft's
+# repository (startup/), at a pinned revision. OSCRAFT_STARTUP=<dir> uses a
+# local checkout of it instead (an OsCraft tree's startup/), for working on
+# both at once. (Cargo then records it in Cargo.lock: build
 # once without it before committing the lock file.)
 ifneq ($(OSCRAFT_STARTUP),)
-CARGO_FLAGS += --config 'patch."https://github.com/capitan-davide/oscraft-startup".oscraft-startup.path="$(abspath $(OSCRAFT_STARTUP))"'
+CARGO_FLAGS += --config 'patch."ssh://git@github.com/capitan-davide/oscraft.git".oscraft-startup.path="$(abspath $(OSCRAFT_STARTUP))"'
 endif
 # The library's directory, wherever cargo has it: for its linker script and
 # for checking the book's links to the library's book.
@@ -126,12 +133,17 @@ $(QEMU_DIR)/bcm2711-rpi-4-b.dtb: tools/rpi4/fetch-firmware.sh
 # QNX's prebuilt RPi4 BSP binaries, unpacked from the BSP zip.
 bsp: $(BSP_DIR)/.unpacked
 
+ifneq ($(QNX_BSP),)
+$(BSP_DIR)/.unpacked:
+	@test -d $(QNX_BSP)/prebuilt || { echo "QNX_BSP=$(QNX_BSP) has no prebuilt/" >&2; exit 1; }
+else
 $(BSP_DIR)/.unpacked: $(QNX_BSP_ZIP)
 	$(need_sdp)
 	@test -n "$<" || { echo "QNX RPi4 BSP zip not found: install the BSP with the QNX Software Center, or set QNX_BSP_ZIP" >&2; exit 1; }
 	@mkdir -p $(@D)
 	unzip -oq $< 'prebuilt/*' 'binary_files_with_symbols/*' -d $(BSP_DIR)
 	touch $@
+endif
 
 # The reference image: the same build file with QNX's own startup.
 qnx-reference: $(BUILD)/qnx-reference.ifs

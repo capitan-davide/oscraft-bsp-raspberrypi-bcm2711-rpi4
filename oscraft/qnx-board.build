@@ -1,0 +1,26 @@
+###############################################################################
+# The QNX overlay's part for the Raspberry Pi 4: the watchdog's kicker, the
+# console on the mini-UART, pdebug's line on the PL011, and the session.
+# (The BSP's drivers, from $QNX_BSP/prebuilt.)
+###############################################################################
+
+[+script] .script = {
+    # QNX's watchdog kicker, as in the BSP's image (it goes into the
+    # background): if it can't run for 2.5 s, the board resets.
+    /compat/qnx/bin/wdtkick -W0x24:0x5A028E4C -W0x1c:0x5A000020
+    # QNX's serial driver for the mini-UART (BSP 8.0 "Driver Commands"); the
+    # shell then runs on it, as in the BSP's image.
+    /compat/qnx/sbin/devc-serminiuart -b115200 -c500000000 -e -F -u1 0xfe215000,125 &
+    waitfor /dev/ser1
+    # The PL011 (UART0) as /dev/ser2: the line for pdebug, QNX's remote
+    # debug agent (gdb's `target qnx`).
+    /compat/qnx/sbin/devc-serpl011 -b115200 -c48000000 -e -F -u2 0xfe201000,153 &
+    waitfor /dev/ser2
+    /compat/qnx/usr/bin/pdebug /dev/ser2,115200 &
+    reopen /dev/ser1
+    [+session] /compat/qnx/bin/ksh &
+}
+
+/compat/qnx/sbin/devc-serminiuart=devc-serminiuart
+/compat/qnx/sbin/devb-sdmmc-bcm2711=devb-sdmmc-bcm2711
+/compat/qnx/bin/wdtkick=wdtkick
